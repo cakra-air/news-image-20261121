@@ -511,7 +511,7 @@ def draw_header(d):
 def draw_main_cards(im, d):
     for i, s in enumerate([x for x in STORIES if x["size"] == "main"]):
         x = 12 + i * 336
-        d.rectangle((x, 198, x + 326, 386), fill=rgb(CARD), outline=rgb(LINE))
+        d.rectangle((x, 198, x + 326, 391), fill=rgb(CARD), outline=rgb(LINE))
         a = art(s["scene"], 320, 90)
         im.paste(a, (x + 3, 201))
         d.rectangle((x + 3, 293, x + 323, 307), fill=rgb(REGION_COLORS[s["region"] - 1]))
@@ -526,13 +526,13 @@ def draw_main_cards(im, d):
         bl = wrap(d, s["body"], F["mb"], 312)[:2]
         for j, ln in enumerate(bl):
             txt(d, (x + 7, 350 + j * 12), fit(d, ln, F["mb"], 312), F["mb"], rgb(MUTED))
-        chip(d, x + 250, 372, s["status"])
+        chip(d, x + 250, 377, s["status"])
 
 
 def draw_small_cards(im, d):
     for i, s in enumerate([x for x in STORIES if x["size"] == "small"]):
         col, row = i % 4, i // 4
-        x, y = 12 + col * 252, 390 + row * 166
+        x, y = 12 + col * 252, 395 + row * 166
         d.rectangle((x, y, x + 244, y + 160), fill=rgb(CARD), outline=rgb(LINE))
         a = art(s["scene"], 238, 80)
         im.paste(a, (x + 3, y + 4))
@@ -588,7 +588,7 @@ def build():
     draw_main_cards(im, d)
     draw_small_cards(im, d)
 
-    rrect(d, (12, 720, 1012, 970), 4, fill=rgb(PANEL), outline=rgb(LINE), width=1)
+    rrect(d, (12, 722, 1012, 972), 4, fill=rgb(PANEL), outline=rgb(LINE), width=1)
     d.rectangle((20, 724, 94, 738), fill=rgb(RED))
     txt(d, (57, 731), "INDEX", F["idx"], "#FFFFFF", "mm")
     txt(d, (102, 731), "ALSO ON SATURDAY 21 NOVEMBER — 19 MORE STORIES, RANKED BY CONSEQUENCE",
