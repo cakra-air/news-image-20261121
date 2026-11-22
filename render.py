@@ -370,7 +370,7 @@ def build(out="entry.png"):
         chip(d, x + mw - 76, y + 174, s["status"])
 
     smalls = [s for s in STORIES if s["size"] == "small"][:8]
-    cw, ch = (W - 24 - 24) // 4, 140
+    cw, ch = (W - 24 - 24) // 4, 160
     for i, s in enumerate(smalls):
         row, col = divmod(i, 4)
         x = 12 + col * (cw + 8)
@@ -388,11 +388,11 @@ def build(out="entry.png"):
         for ln in wrap(s["body"], font(10), cw - 108, d)[:3]:
             put(d, (x + 100, yy), ln, font(10), MUTED)
             yy += 12
-        put(d, (x + 100, y + 131), s["source"], font(7.5), MUTED)
-        chip(d, x + cw - 74, y + 125, s["status"], fill="#E9E2D2", fsize=7)
+        put(d, (x + 100, y + 151), s["source"], font(7.5), MUTED)
+        chip(d, x + cw - 74, y + 145, s["status"], fill="#E9E2D2", fsize=7)
 
-    map_panel(d, (12, 680, 392, 920))
-    list_panel(d, (400, 680, W - 12, 920))
+    map_panel(d, (12, 720, 392, 920))
+    list_panel(d, (400, 720, W - 12, 920))
 
     # Badge on the left; every body line starts at the same x as the first
     # line of content, never under the badge.

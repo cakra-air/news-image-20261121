@@ -182,8 +182,9 @@ STORIES = [
 ]
 
 DATE_CHECK = (
-    "UK–EU trade reset · Cyclone Akvari's landfill · Russian barrage on Kyiv's bridges · "
-    "Voyager 1's signal · BepiColombo at Mercury · a final COP31 text · 2035 religion forecast"
+    "Left out: UK–EU trade reset · Cyclone Akvari's landfill · Russian barrage on Kyiv's "
+    "bridges · Voyager 1's signal · BepiColombo at Mercury · a final COP31 text · "
+    "2035 religion forecast"
 )
 
 SOURCES_LINE = (
