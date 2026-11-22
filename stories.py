@@ -182,11 +182,8 @@ STORIES = [
 ]
 
 DATE_CHECK = (
-    "Left out on purpose: the UK-EU trade reset and Cyclone Akvari's landfill (both 20 Nov); "
-    "Voyager 1's signal (18 Nov); BepiColombo's Mercury orbit (first reported 20 Nov, not "
-    "confirmed as a 21 Nov event); and 'Islam to pass Christianity by 2035' (a projection, "
-    "not that day's news). Kept in: the Poland missile and Wall Street's correction — both "
-    "first reported on 21 Nov."
+    "Left out: UK–EU deal & Cyclone Akvari (20 Nov); Voyager signal (18 Nov); "
+    "BepiColombo orbit (not confirmed as 21 Nov); 2035 religion forecast (a projection)."
 )
 
 SOURCES_LINE = (

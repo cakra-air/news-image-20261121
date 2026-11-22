@@ -32,7 +32,7 @@ def main():
         if s["size"] == "main":
             avail, fnt = 326 - 14, font(16, True, True)
         elif s["size"] == "small":
-            avail, fnt = 244 - 92, font(10, True)
+            avail, fnt = 244 - 108, font(13, True)
         else:
             avail, fnt = 310 - 24, font(8)
         for ln in wrap(s["headline"], fnt, avail, d):
@@ -66,13 +66,13 @@ def main():
 
     # five coordinates checked by hand against the projection:
     # (story number, expected continent box in projected pixels)
-    mx0, my0, mx1, my1 = 18, 638, 356, 838
+    mx0, my0, mx1, my1 = 18, 704, 386, 898
     def proj(lon, lat):
         return (mx0 + (lon + 180) / 360 * (mx1 - mx0),
                 my0 + (83 - lat) / 141 * (my1 - my0))
-    spots = [(1, (190, 250, 680, 730), "Antalya"), (2, (210, 250, 700, 740), "Riyadh"),
-             (3, (95, 140, 750, 790), "Junin"), (10, (335, 360, 800, 830), "Wellington"),
-             (17, (195, 235, 770, 810), "Pretoria")]
+    spots = [(1, (210, 255, 750, 785), "Antalya"), (2, (230, 270, 765, 800), "Riyadh"),
+             (3, (105, 145, 815, 850), "Junin"), (10, (365, 390, 860, 885), "Wellington"),
+             (17, (210, 250, 845, 865), "Pretoria")]
     for n, (bx0, by0, bx1, by1), label in spots:
         s = next(x for x in STORIES if x["n"] == n)
         px, py = proj(s["lon"], s["lat"])
@@ -82,8 +82,8 @@ def main():
     # ---- 3. 300px font measurement ----------------------------------------
     sizes = {
         "title": 66, "main headline": 16, "main body": 10,
-        "small headline": 10, "small body": 8, "list entry": 8,
-        "map badge number": 8, "date check": 9,
+        "small headline": 13, "small body": 10, "list entry": 8,
+        "map badge number": 8, "date check": 8,
     }
     for name, px in sizes.items():
         report.append((f"300px {name}", "INFO", f"{px}px -> {px * SCALE:.2f}px"))

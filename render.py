@@ -74,124 +74,136 @@ def chip(d, x, y, text, fill="#E7DFCC", fsize=8):
 
 
 # ---------------------------------------------------------------------------
-# vignettes. Each one carries a place tag and a time tag inside the drawing.
+# vignettes. Normalised coordinates so each one fills whatever box it gets.
+# Every vignette carries a place tag and a time tag inside the drawing.
 # ---------------------------------------------------------------------------
 def scene(d, box, s):
     x0, y0, x1, y1 = box
+    bw, bh = x1 - x0, y1 - y0
     col = rgb(REGION_COLORS[s["region"]])
-    d.rectangle(box, fill="#E8EEF1" if s["scene"] not in ("missiles", "quake") else "#1F2A3A")
-    light = s["scene"] in ("missiles", "quake")
-    ink = "#F2F2EE" if light else INK
+    dark = s["scene"] in ("missiles", "quake")
+    d.rectangle(box, fill="#1F2A3A" if dark else "#E8EEF1")
+    ink = "#F2F2EE" if dark else INK
 
-    if s["scene"] == "cop":
-        cx, cy = x0 + 38, y0 + 44
-        d.ellipse([cx - 25, cy - 25, cx + 25, cy + 25], outline=col, width=2)
-        for k in range(-18, 19, 9):
-            d.arc([cx - 25, cy - 25, cx + 25, cy + 25], 0, 360, fill=rgb(GRAT))
-            d.line([cx + k * 1.4, cy - 24, cx + k * 1.4, cy + 24], fill=rgb(GRAT), width=1)
-        d.line([cx - 24, cy, cx + 24, cy], fill=rgb(GRAT), width=1)
-        d.rounded_rectangle([x0 + 74, y0 + 20, x1 - 8, y0 + 66], radius=3,
-                            fill="#FFFDF7", outline=rgb(LINE))
-        put(d, (x0 + 80, y0 + 28), "DRAFT 3", font(10, True), INK)
-        put(d, (x0 + 80, y0 + 43), "no deal", font(9), MUTED)
-        d.rounded_rectangle([x1 - 62, y0 + 46, x1 - 10, y0 + 70], radius=3, fill=rgb(RED))
-        put(d, (x1 - 36, y0 + 58), "OVERTIME", font(9, True), "#FFFFFF", anchor="mm")
+    def P(fx, fy):
+        return (x0 + fx * bw, y0 + fy * bh)
 
-    elif s["scene"] == "missiles":
-        for bx in range(x0 + 8, x1 - 8, 18):
-            h = 14 + (bx % 5) * 5
-            d.rectangle([bx, y1 - 10 - h, bx + 12, y1 - 10], fill="#33445C")
-            for wy in range(y1 - 8 - h, y1 - 12, 6):
-                d.rectangle([bx + 2, wy, bx + 4, wy + 2], fill="#E8B84B")
+    def line(a, b, fill, width=2):
+        d.line([P(*a), P(*b)], fill=fill, width=width)
+
+    def boxc(a, b, fill=None, outline=None, width=1):
+        d.rectangle([P(*a), P(*b)], fill=fill, outline=outline, width=width)
+
+    def ell(a, b, fill=None, outline=None, width=1):
+        d.ellipse([P(*a), P(*b)], fill=fill, outline=outline, width=width)
+
+    def poly(points, fill):
+        d.polygon([P(*p) for p in points], fill=fill)
+
+    k = s["scene"]
+    if k == "cop":
+        cx, cy = P(0.14, 0.48)
+        r = 0.29 * bh
+        d.ellipse([cx - r, cy - r, cx + r, cy + r], outline=col, width=2)
+        line((0.14, 0.19), (0.14, 0.77), rgb(GRAT))
+        line((0.03, 0.48), (0.25, 0.48), rgb(GRAT))
+        boxc((0.33, 0.18), (0.93, 0.72), fill="#FFFDF7", outline=rgb(LINE))
+        put(d, P(0.37, 0.30), "DRAFT 3", font(10, True), INK)
+        put(d, P(0.37, 0.52), "no deal", font(9), MUTED)
+        boxc((0.72, 0.60), (0.96, 0.90), fill=rgb(RED))
+        put(d, P(0.84, 0.75), "OVERTIME", font(9, True), "#FFFFFF", anchor="mm")
+
+    elif k == "missiles":
+        for i in range(9):
+            fx = 0.04 + i * 0.11
+            h = 0.20 + (i % 4) * 0.06
+            boxc((fx, 1 - h), (fx + 0.08, 0.88), fill="#33445C")
+            for wy in (1 - h + 0.04, 1 - h + 0.13, 1 - h + 0.22):
+                boxc((fx + 0.02, wy), (fx + 0.045, wy + 0.03), fill="#E8B84B")
         for i in range(3):
-            sx = x0 + 18 + i * 26
-            d.line([sx, y1 - 12, sx + 22, y0 + 16], fill="#F2C14E", width=2)
-            d.ellipse([sx + 18, y0 + 12, sx + 26, y0 + 20], fill="#F2A03D")
-        put(d, (x0 + 8, y0 + 6), "03:00", font(9, True), "#F2F2EE")
+            fx = 0.10 + i * 0.28
+            line((fx, 0.90), (fx + 0.16, 0.10), "#F2C14E", 2)
+            ell((fx + 0.13, 0.06), (fx + 0.19, 0.14), fill="#F2A03D")
+        put(d, P(0.04, 0.04), "03:00", font(9, True), "#F2F2EE")
 
-    elif s["scene"] == "quake":
-        d.polygon([(x0, y1), (x0 + 40, y0 + 42), (x0 + 76, y1),
-                   (x0 + 112, y0 + 50), (x1, y1)], fill="#6B5B42")
+    elif k == "quake":
+        poly([(0, 0.92), (0.26, 0.32), (0.48, 0.92), (0.72, 0.36), (1, 0.92)], fill="#6B5B42")
         pts = []
-        for i in range(0, int(x1 - x0), 4):
-            amp = 16 if 60 < i < 100 else 2
-            yy = y0 + 44 + (amp if (i // 4) % 2 == 0 else -amp)
-            pts.append((x0 + i, yy))
+        for i in range(41):
+            fx = i / 40
+            amp = 0.16 if 0.28 < fx < 0.62 else 0.01
+            fy = 0.40 + (amp if i % 2 == 0 else -amp)
+            pts.append(P(fx, fy))
         d.line(pts, fill=rgb(RED), width=2)
-        for hx in (x0 + 32, x0 + 118):
-            d.rectangle([hx, y1 - 16, hx + 20, y1], fill="#EADCB9", outline="#3A3026")
-            d.polygon([(hx - 2, y1 - 16), (hx + 10, y1 - 24), (hx + 22, y1 - 16)], fill=rgb(RED))
-        put(d, (x0 + 8, y0 + 6), "00:09 UTC · 108 km", font(9, True), "#F2F2EE")
+        for hx in (0.20, 0.76):
+            boxc((hx, 0.72), (hx + 0.13, 0.92), fill="#EADCB9", outline="#3A3026")
+            poly([(hx - 0.02, 0.72), (hx + 0.065, 0.60), (hx + 0.15, 0.72)], fill=rgb(RED))
+        put(d, P(0.04, 0.04), "00:09 UTC · 108 km", font(9, True), "#F2F2EE")
 
-    elif s["scene"] == "bridge":
-        d.line([x0, y0 + 62, x1, y0 + 62], fill="#5C5C5C", width=3)
+    elif k == "bridge":
+        line((0, 0.76), (1, 0.76), "#5C5C5C", 3)
         for i in range(4):
-            px = x0 + 18 + i * 24
-            d.line([px, y0 + 62, px, y0 + 28], fill="#5C5C5C", width=2)
-            d.ellipse([px - 3, y0 + 22, px + 3, y0 + 28], fill=rgb(RED))
-        d.polygon([(x0 + 52, y0 + 8), (x0 + 58, y0 + 22), (x0 + 46, y0 + 22)], fill=rgb(RED))
-        put(d, (x0 + 6, y0 + 4), "DOUBLE TAP", font(8, True), INK)
+            fx = 0.12 + i * 0.24
+            line((fx, 0.76), (fx, 0.30), "#5C5C5C", 2)
+            ell((fx - 0.035, 0.23), (fx + 0.035, 0.30), fill=rgb(RED))
+        poly([(0.50, 0.04), (0.57, 0.22), (0.43, 0.22)], fill=rgb(RED))
+        put(d, P(0.04, 0.03), "DOUBLE TAP", font(8, True), INK)
 
-    elif s["scene"] == "uranium":
-        d.ellipse([x0 + 22, y0 + 22, x0 + 62, y0 + 62], outline=col, width=3)
-        d.ellipse([x0 + 32, y0 + 32, x0 + 52, y0 + 52], fill=col)
-        d.line([x0 + 42, y0 + 10, x0 + 42, y0 + 22], fill=col, width=3)
-        put(d, (x0 + 6, y0 + 66), "STAYS IN IRAN", font(8, True), INK)
+    elif k == "uranium":
+        ell((0.22, 0.12), (0.72, 0.62), outline=col, width=3)
+        ell((0.36, 0.26), (0.58, 0.48), fill=col)
+        line((0.47, 0.02), (0.47, 0.12), col, 3)
+        put(d, P(0.05, 0.72), "STAYS IN IRAN", font(8, True), INK)
 
-    elif s["scene"] == "tax":
+    elif k == "tax":
         for i in range(3):
-            bx = x0 + 10 + i * 26
-            d.rectangle([bx, y0 + 30, bx + 20, y1 - 8], fill="#4A5A6A")
-            for wy in (y0 + 36, y0 + 46, y0 + 56):
-                d.rectangle([bx + 3, wy, bx + 8, wy + 3], fill="#D9E2EA")
-        d.ellipse([x1 - 58, y0 + 12, x1 - 12, y0 + 58], outline=rgb(RED), width=3)
-        put(d, (x1 - 35, y0 + 35), "%", font(22, True), rgb(RED), anchor="mm")
+            fx = 0.06 + i * 0.26
+            boxc((fx, 0.30), (fx + 0.18, 0.92), fill="#4A5A6A")
+            for wy in (0.38, 0.52, 0.66):
+                boxc((fx + 0.04, wy), (fx + 0.10, wy + 0.05), fill="#D9E2EA")
+        ell((0.56, 0.06), (0.94, 0.44), outline=rgb(RED), width=3)
+        put(d, P(0.75, 0.25), "%", font(20, True), rgb(RED), anchor="mm")
 
-    elif s["scene"] == "flags":
-        d.rectangle([x0 + 12, y0 + 16, x0 + 44, y0 + 56], fill=rgb(RED))
-        d.ellipse([x0 + 18, y0 + 24, x0 + 28, y0 + 34], fill="#F2C14E")
-        d.rectangle([x1 - 46, y0 + 16, x1 - 14, y0 + 56], fill="#FFFFFF", outline="#B0B0B0")
-        d.ellipse([x1 - 34, y0 + 26, x1 - 22, y0 + 38], fill=rgb(RED))
-        put(d, ((x0 + x1) // 2, y0 + 64), "RETRACT", font(8, True), INK, anchor="mm")
+    elif k == "flags":
+        boxc((0.06, 0.14), (0.40, 0.70), fill=rgb(RED))
+        ell((0.14, 0.28), (0.25, 0.40), fill="#F2C14E")
+        boxc((0.58, 0.14), (0.92, 0.70), fill="#FFFFFF", outline="#B0B0B0")
+        ell((0.68, 0.30), (0.81, 0.44), fill=rgb(RED))
+        put(d, P(0.50, 0.82), "RETRACT", font(9, True), INK, anchor="mm")
 
-    elif s["scene"] == "btc":
-        pts = [(x0 + 8, y0 + 56), (x0 + 28, y0 + 30), (x0 + 48, y0 + 42),
-               (x0 + 70, y0 + 18), (x0 + 96, y0 + 34), (x1 - 8, y0 + 12)]
+    elif k == "btc":
+        d.rectangle([P(0.02, 0.02), P(0.66, 0.15)], fill="#E8EEF1")
+        put(d, P(0.04, 0.04), "BTC $60,000", font(8, True), INK)
+        pts = [P(0.04, 0.72), P(0.22, 0.42), P(0.40, 0.56),
+               P(0.60, 0.24), P(0.80, 0.40), P(0.96, 0.18)]
         d.line(pts, fill=rgb(RED), width=3)
-        d.rectangle([x0 + 4, y0 + 2, x0 + 62, y0 + 13], fill="#E8EEF1")
-        put(d, (x0 + 6, y0 + 4), "BTC $60,000", font(8, True), INK)
 
-    elif s["scene"] == "robot":
-        d.rounded_rectangle([x0 + 30, y0 + 18, x0 + 66, y0 + 58], radius=6, outline=col, width=3)
-        d.ellipse([x0 + 40, y0 + 30, x0 + 45, y0 + 35], fill=col)
-        d.ellipse([x0 + 52, y0 + 30, x0 + 57, y0 + 35], fill=col)
-        put(d, (x0 + 6, y0 + 4), "2028", font(13, True), INK)
-        put(d, (x0 + 6, y0 + 62), "no ban yet", font(8), MUTED)
+    elif k == "robot":
+        d.rounded_rectangle([P(0.24, 0.20), P(0.64, 0.68)], radius=6, outline=col, width=3)
+        ell((0.34, 0.34), (0.41, 0.41), fill=col)
+        ell((0.49, 0.34), (0.56, 0.41), fill=col)
+        put(d, P(0.04, 0.04), "2028", font(13, True), INK)
+        put(d, P(0.04, 0.80), "no ban yet", font(8), MUTED)
 
-    elif s["scene"] == "cricket":
-        d.line([x0 + 14, y1 - 16, x0 + 58, y0 + 24], fill="#8A6A3C", width=5)
-        d.ellipse([x0 + 52, y0 + 18, x0 + 64, y0 + 30], fill=rgb(RED))
-        d.rounded_rectangle([x1 - 70, y0 + 14, x1 - 8, y0 + 54], radius=3, fill="#2E3A46")
-        put(d, (x1 - 39, y0 + 34), "136", font(18, True), "#FFFFFF", anchor="mm")
+    elif k == "cricket":
+        line((0.12, 0.96), (0.50, 0.18), "#8A6A3C", 6)
+        ell((0.46, 0.12), (0.58, 0.24), fill=rgb(RED))
+        d.rounded_rectangle([P(0.58, 0.16), P(0.96, 0.60)], radius=3, fill="#2E3A46")
+        put(d, P(0.77, 0.38), "136", font(18, True), "#FFFFFF", anchor="mm")
 
-    elif s["scene"] == "f1":
-        d.polygon([(x0 + 10, y0 + 56), (x0 + 54, y0 + 44), (x0 + 92, y0 + 52),
-                   (x0 + 78, y0 + 60), (x0 + 18, y0 + 62)], fill=rgb(RED))
-        for wx in (x0 + 22, x0 + 72):
-            d.ellipse([wx, y0 + 56, wx + 14, y0 + 70], fill="#202020")
-        d.line([x1 - 34, y0 + 18, x1 - 34, y0 + 58], fill="#505050", width=2)
-        d.polygon([(x1 - 34, y0 + 18), (x1 - 8, y0 + 26), (x1 - 34, y0 + 34)], fill=rgb(RED))
-        put(d, (x0 + 8, y0 + 4), "POLE", font(10, True), INK)
+    elif k == "f1":
+        poly([(0.04, 0.60), (0.42, 0.44), (0.84, 0.54), (0.70, 0.66), (0.14, 0.68)], fill=rgb(RED))
+        for fx in (0.18, 0.66):
+            ell((fx, 0.60), (fx + 0.16, 0.76), fill="#202020")
+        line((0.90, 0.14), (0.90, 0.54), "#505050", 2)
+        poly([(0.90, 0.14), (0.99, 0.21), (0.90, 0.28)], fill=rgb(RED))
+        put(d, P(0.04, 0.03), "POLE", font(10, True), INK)
 
     else:
-        cx, cy = (x0 + x1) // 2, (y0 + y1) // 2
-        d.ellipse([cx - 10, cy - 10, cx + 10, cy + 10], outline=col, width=2)
-        put(d, (cx, cy), s["place"].split(",")[0][:10], font(8, True), INK, anchor="mm")
+        ell((0.34, 0.30), (0.66, 0.62), outline=col, width=2)
+        put(d, P(0.50, 0.46), s["place"].split(",")[0][:10], font(8, True), INK, anchor="mm")
 
-    # place + time tag, always inside the illustration
-    tag = s["place"]
-    put(d, (x0 + 6, y1 - 13), tag, font(8, True), ink if light else MUTED)
-
+    put(d, (x0 + 5, y1 - 13), s["place"], font(8, True), ink)
 
 # ---------------------------------------------------------------------------
 # map
@@ -201,7 +213,7 @@ def map_panel(d, box):
     d.rounded_rectangle(box, radius=4, fill="#FFFDF7", outline=rgb(LINE), width=1)
     put(d, (x0 + 8, y0 + 5), "WHERE IT HAPPENED", font(10, True), INK)
 
-    mx0, my0, mx1, my1 = x0 + 6, y0 + 24, x1 - 6, y1 - 46
+    mx0, my0, mx1, my1 = x0 + 6, y0 + 24, x1 - 6, y1 - 62
     d.rectangle([mx0, my0, mx1, my1], fill=rgb(OCEAN))
     LAT_TOP, LAT_BOT = 83.0, -58.0
 
@@ -267,13 +279,13 @@ def map_panel(d, box):
         MAP_PLACEMENTS.append((s["n"], dx, dy, bx, by))
         badge(d, bx, by, s["n"], col, r=6, fsize=8)
 
-    # legend, one row of seven
-    lx, ly = x0 + 7, y1 - 37
-    for reg in REGIONS:
+    # legend, two rows so every region fits the wider map panel
+    for i, reg in enumerate(REGIONS):
+        row, col = divmod(i, 4)
+        lx, ly = x0 + 7 + col * 96, y1 - 52 + row * 16
         cnt = sum(1 for s in STORIES if s["region"] == reg)
         d.ellipse([lx, ly + 2, lx + 8, ly + 10], fill=rgb(REGION_COLORS[reg]))
         put(d, (lx + 12, ly + 6), f"{reg} {cnt}", font(8, True), INK, anchor="lm")
-        lx += d.textlength(f"{reg} {cnt}", font=font(8, True)) + 22
     put(d, (x0 + 8, y1 - 14),
         "Each number is the story with that number on this page. Dots mark the place; lines join dot to number.",
         font(7), MUTED)
@@ -356,40 +368,34 @@ def build(out="entry.png"):
         chip(d, x + mw - 76, y + 174, s["status"])
 
     smalls = [s for s in STORIES if s["size"] == "small"][:8]
-    cw = (W - 24 - 24) // 4
+    cw, ch = (W - 24 - 24) // 4, 140
     for i, s in enumerate(smalls):
         row, col = divmod(i, 4)
         x = 12 + col * (cw + 8)
-        y = 392 + row * 108
-        d.rectangle([x, y, x + cw, y + 104], fill=rgb(CARD), outline=rgb(LINE))
-        scene(d, (x + 3, y + 3, x + 83, y + 99), s)
-        d.rectangle([x + 86, y + 3, x + cw - 3, y + 15], fill=rgb(REGION_COLORS[s["region"]]))
-        put(d, (x + 89, y + 9), s["kicker"], font(7, True), "#FFFFFF", anchor="lm")
-        badge(d, x + cw - 13, y + 9, s["n"], REGION_COLORS[s["region"]], r=6, fsize=8)
-        yy = y + 20
-        for ln in wrap(s["headline"], font(10, True), cw - 92, d)[:2]:
-            put(d, (x + 87, yy), ln, font(10, True), INK)
+        y = 390 + row * (ch + 6)
+        d.rectangle([x, y, x + cw, y + ch], fill=rgb(CARD), outline=rgb(LINE))
+        scene(d, (x + 4, y + 4, x + 96, y + ch - 4), s)
+        d.rectangle([x + 100, y + 4, x + cw - 4, y + 18], fill=rgb(REGION_COLORS[s["region"]]))
+        put(d, (x + 103, y + 11), s["kicker"], font(8, True), "#FFFFFF", anchor="lm")
+        badge(d, x + cw - 13, y + 11, s["n"], REGION_COLORS[s["region"]], r=6, fsize=8)
+        yy = y + 24
+        for ln in wrap(s["headline"], font(13, True), cw - 108, d)[:3]:
+            put(d, (x + 100, yy), ln, font(13, True), INK)
+            yy += 16
+        yy = max(yy + 3, y + 76)
+        for ln in wrap(s["body"], font(10), cw - 108, d)[:3]:
+            put(d, (x + 100, yy), ln, font(10), MUTED)
             yy += 12
-        yy = max(yy + 3, y + 58)
-        for ln in wrap(s["body"], font(8), cw - 92, d)[:2]:
-            put(d, (x + 87, yy), ln, font(8), MUTED)
-            yy += 10
-        put(d, (x + 87, y + 96), s["source"], font(7, True), rgb(REGION_COLORS[s["region"]]))
+        put(d, (x + 100, y + 131), s["source"], font(8, True), rgb(REGION_COLORS[s["region"]]))
 
-    map_panel(d, (12, 614, 362, 884))
-    list_panel(d, (370, 614, W - 12, 884))
+    map_panel(d, (12, 680, 392, 960))
+    list_panel(d, (400, 680, W - 12, 960))
 
-    d.rounded_rectangle([12, 890, W - 12, 976], radius=4, fill="#F3E7D5", outline=rgb(RED), width=1)
-    put(d, (20, 898), "DATE CHECK — stories left out on purpose", font(11, True), rgb(RED))
-    yy = 913
-    for ln in wrap(DATE_CHECK, font(9), W - 44, d)[:5]:
-        put(d, (20, yy), ln, font(9), INK)
-        yy += 12
-    put(d, (20, 969), SOURCES_LINE, font(7), MUTED)
-
-    put(d, (W // 2, 996),
-        "Every story happened, or was first reported, on Saturday 21 November 2026. Original drawings by this agent.",
-        font(8), MUTED, anchor="mm")
+    # Sources and DATE CHECK are one bottom block, pushed to the very bottom.
+    put(d, (12, 978),
+        "Every story happened, or was first reported, on Saturday 21 November 2026. Sources are named beside each story. Original drawings.",
+        font(7.5), MUTED)
+    put(d, (12, 1006), "DATE CHECK — " + DATE_CHECK, font(8), rgb(RED))
 
     im.save(out, "PNG", optimize=True)
     return out
