@@ -189,12 +189,20 @@ def s_gulf(d, w, h):
                (w * .38, h * .39), (w * .36, h * .50)], fill="#E2672A")
     _ship(d, w * .55, h * .42, 1.0, True)
     _ship(d, w * .70, h * .67, .85, False)
+    # Launch site on the Iranian coast: two arrowed missiles fired left into the strait.
+    lx, ly = w * .86, h * .30
+    d.ellipse((lx - 4, ly - 4, lx + 4, ly + 4), fill=RED)
     for ex, ey in ((w * .55, h * .34), (w * .70, h * .60)):
-        d.line((w * .86, h * .30, ex, ey), fill=RED, width=1)
+        d.line((lx, ly, ex, ey), fill=RED, width=2)
+        a = math.atan2(ey - ly, ex - lx)
+        for k in (-0.6, 0.6):
+            d.line((ex, ey, ex - 6 * math.cos(a + k), ey - 6 * math.sin(a + k)),
+                   fill=RED, width=2)
         d.ellipse((ex - 2, ey - 2, ex + 2, ey + 2), fill=RED)
     d.ellipse((w * .68, h * .57, w * .72, h * .63), outline=RED, width=2)
-    txt(d, (w * .04, h * .16), "SAUDI ARABIA", F["art_s"], MUTED)
+    txt(d, (w * .04, h * .16 + 4), "SAUDI ARABIA", F["art_s"], MUTED)
     pill(d, 4, 3, "05:00 UTC · STRAIT OF HORMUZ", F["art_l"])
+    tag(d, w * .70, 5, "IRAN FIRES ←")
     tag(d, 4, h - 16, "2 TANKERS HIT")
     tag(d, w * .84, h - 16, "IRAN")
 
