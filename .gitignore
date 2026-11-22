@@ -1,0 +1,6 @@
+refs/
+research_feeds.py
+research_out.txt
+crop_*.png
+*.tar.gz
+__pycache__/
