@@ -85,10 +85,10 @@ STORIES = [
          source="Formula 1", status="OFFICIAL", size="small", scene="f1",
          brief="Las Vegas: Antonelli quickest, Verstappen starts on pole"),
 
-    dict(n=12, region="Europe", place="ZAGREB, CROATIA", lat=45.81, lon=15.98,
-         kicker="PROTEST · JUSTICE", headline="Croatians rally over hospital death",
-         body="Demonstrators demand answers in a psychiatric-hospital case.",
-         source="U.S. News", status="REPORTED", size="brief", scene="pin", brief=""),
+    dict(n=12, region="Europe", place="WARSAW, POLAND", lat=52.23, lon=21.01,
+         kicker="NATO · REACTION", headline="Poland rejects Trump's 'mistake' claim",
+         body="Tusk disputes the US account of the missile incident.",
+         source="BBC", status="REPORTED", size="brief", scene="pin", brief=""),
 
     dict(n=13, region="Middle East", place="JAZAN, SAUDI ARABIA", lat=16.88, lon=42.56,
          kicker="WAR · INTERCEPT", headline="Two missiles downed over Jazan",
@@ -160,10 +160,10 @@ STORIES = [
          body="Former president hospitalised, his family says.",
          source="UPI", status="REPORTED", size="brief", scene="pin", brief=""),
 
-    dict(n=27, region="Americas", place="WASHINGTON, USA", lat=38.90, lon=-77.04,
-         kicker="POLICY · RATES", headline="Trump vows a 10% credit-card rate cap",
-         body="He says he will work with Democrats on the measure.",
-         source="Audacy", status="REPORTED", size="brief", scene="pin", brief=""),
+    dict(n=27, region="Americas", place="TORONTO, CANADA", lat=43.65, lon=-79.38,
+         kicker="INDUSTRY · TARIFFS", headline="Ford reopens Canada plant",
+         body="The automaker defies Trump's tariffs on Canadian output.",
+         source="Breitbart", status="REPORTED", size="brief", scene="pin", brief=""),
 
     dict(n=28, region="Oceania", place="SYDNEY, AUSTRALIA", lat=-33.87, lon=151.21,
          kicker="CRICKET", headline="Cummins keeps the captaincy",
@@ -182,10 +182,10 @@ STORIES = [
 ]
 
 DATE_CHECK = (
-    "Left out as Friday 20 November's news: Wall Street's fall into a correction, the Russian "
-    "barrage on Kyiv's bridges, the missile that landed in Poland, the UK–EU deal and Cyclone "
-    "Akvari's landfill, older still: Voyager 1's fight-day (18 Nov). Not confirmed when drawn, "
-    "so not shown: BepiColombo entering Mercury orbit, a final COP31 text."
+    "Left out as Friday 20 November's news: the UK–EU trade reset and Cyclone Akvari's "
+    "landfill. Older still: Voyager 1's signal (18 Nov). Not confirmed as a 21 Nov event, "
+    "so not shown: BepiColombo's Mercury orbit. A 2035 religion forecast is a projection, "
+    "not that day's news."
 )
 
 SOURCES_LINE = (
