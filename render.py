@@ -62,6 +62,7 @@ F = {
     "sk": face("arialbd.ttf", 8),
     "ss": face("arial.ttf", 7),
     "sh": face("georgiab.ttf", 11),
+    "sb": face("arial.ttf", 9),
     "num": face("arialbd.ttf", 8),
     "lh": face("arial.ttf", 8),
     "ls": face("arial.ttf", 6),
@@ -552,7 +553,10 @@ def draw_small_cards(im, d):
         txt(d, (x + 235, y + 93), s["source"], F["ss"], "#FFFFFF", "rm")
         hl = wrap(d, s["headline"], F["sh"], 232)[:2]
         for j, ln in enumerate(hl):
-            txt(d, (x + 6, y + 104 + j * 12), fit(d, ln, F["sh"], 232), F["sh"], rgb(INK))
+            txt(d, (x + 6, y + 103 + j * 12), fit(d, ln, F["sh"], 232), F["sh"], rgb(INK))
+        bl = wrap(d, s["brief"], F["sb"], 232)[:2]
+        for j, ln in enumerate(bl):
+            txt(d, (x + 6, y + 129 + j * 9), fit(d, ln, F["sb"], 232), F["sb"], rgb(MUTED))
         chip(d, x + 174, y + 147, s["status"])
 
 
