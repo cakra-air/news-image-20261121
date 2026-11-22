@@ -51,29 +51,93 @@ def face(name, size):
 
 F = {
     "mast": face("georgiab.ttf", 66),
-    "deck": face("georgia.ttf", 15),
+    "deck": face("georgia.ttf", 16),
     "stat": face("georgiab.ttf", 30),
-    "cap": face("arial.ttf", 7),
-    "rgn": face("arialbd.ttf", 9),
-    "mk": face("arialbd.ttf", 9),
-    "ms": face("arial.ttf", 7),
+    "cap": face("verdanab.ttf", 10),
+    "rgn": face("arialbd.ttf", 12),
+    "mk": face("arialbd.ttf", 11),
+    "ms": face("arial.ttf", 9),
     "mh": face("georgiab.ttf", 18),
-    "mb": face("arial.ttf", 10),
-    "sk": face("arialbd.ttf", 8),
-    "ss": face("arial.ttf", 7),
-    "sh": face("georgiab.ttf", 11),
-    "sb": face("arial.ttf", 9),
-    "num": face("arialbd.ttf", 8),
-    "lh": face("arial.ttf", 8),
-    "ls": face("arial.ttf", 6),
-    "leg": face("arial.ttf", 6),
-    "idx": face("arialbd.ttf", 8),
-    "lab": face("arialbd.ttf", 9),
-    "date": face("arial.ttf", 7),
-    "src": face("arial.ttf", 8),
-    "art_l": face("arialbd.ttf", 9),
-    "art_s": face("arialbd.ttf", 9),
+    "mb": face("arial.ttf", 12),
+    "sk": face("arialbd.ttf", 10),
+    "ss": face("arial.ttf", 9),
+    "sh": face("georgiab.ttf", 12),
+    "sb": face("arial.ttf", 11),
+    "num": face("arialbd.ttf", 10),
+    "lh": face("arialbd.ttf", 12),
+    "ls": face("arial.ttf", 11),
+    "leg": face("verdana.ttf", 9),
+    "idx": face("arialbd.ttf", 10),
+    "lab": face("arialbd.ttf", 14),
+    "date": face("verdana.ttf", 12),
+    "src": face("verdana.ttf", 12),
+    "art_l": face("arialbd.ttf", 11),
+    "art_s": face("arialbd.ttf", 11),
 }
+
+
+SS = 8  # every element is drawn at 1/8-pixel precision, then reduced to 1024px
+
+
+def _scaled_font(font, scale):
+    path = getattr(font, "path", None)
+    if path:
+        return ImageFont.truetype(path, max(1, round(font.size * scale)))
+    return font
+
+
+class ScaledDraw:
+    """Draw 1024px-space geometry onto an SS-times larger canvas."""
+
+    def __init__(self, draw, scale):
+        self.d = draw
+        self.s = scale
+
+    def _coords(self, value):
+        if isinstance(value, (list, tuple)):
+            return tuple(self._coords(v) for v in value)
+        if isinstance(value, (int, float)):
+            return value * self.s
+        return value
+
+    def _kw(self, kwargs):
+        out = {}
+        for key, value in kwargs.items():
+            if key == "font":
+                out[key] = _scaled_font(value, self.s)
+            elif key in ("width", "stroke_width") and isinstance(value, (int, float)):
+                out[key] = max(1, round(value * self.s))
+            else:
+                out[key] = value
+        return out
+
+    def rectangle(self, box, **kw):
+        return self.d.rectangle(self._coords(box), **self._kw(kw))
+
+    def rounded_rectangle(self, box, **kw):
+        radius = kw.pop("radius", 0)
+        if isinstance(radius, (int, float)):
+            kw["radius"] = max(1, round(radius * self.s))
+        return self.d.rounded_rectangle(self._coords(box), **self._kw(kw))
+
+    def ellipse(self, box, **kw):
+        return self.d.ellipse(self._coords(box), **self._kw(kw))
+
+    def arc(self, box, start, end, **kw):
+        return self.d.arc(self._coords(box), start, end, **self._kw(kw))
+
+    def line(self, coords, **kw):
+        return self.d.line(self._coords(coords), **self._kw(kw))
+
+    def polygon(self, coords, **kw):
+        return self.d.polygon(self._coords(coords), **self._kw(kw))
+
+    def text(self, xy, text, **kw):
+        return self.d.text(self._coords(xy), text, **self._kw(kw))
+
+    def textlength(self, text, **kw):
+        font = _scaled_font(kw.pop("font", None), self.s)
+        return self.d.textlength(text, font=font, **self._kw(kw)) / self.s
 
 
 def txt(d, xy, s, f, fill, anchor=None):
@@ -209,7 +273,12 @@ def s_gulf(d, w, h):
     _ship(d, w * .70, h * .74, .85, False)
     for cx, cy in ((w * .50, h * .58), (w * .70, h * .66)):
         d.ellipse((cx - 9, cy - 7, cx + 9, cy + 7), outline=RED, width=2)
-    txt(d, (w * .04, h * .16 + 4), "SAUDI ARABIA", F["art_s"], MUTED)
+    _flag(d, 10, 28, 14, 9, ["#006C35"])
+    _flag(d, w - 26, 38, 16, 10, ["#239F40", "#FFFFFF", "#DA0000"])
+    txt(d, (26, 24), "SAUDI ARABIA", F["art_s"], INK)
+    txt(d, (w - 30, 52), "IRAN", F["art_s"], INK)
+    for yy in range(16, int(h * .78), 8):
+        d.line((w * .79, yy, w * .79, yy + 4), fill="#6C6459")
     pill(d, 4, 3, "05:00 UTC · STRAIT OF HORMUZ", F["art_l"])
     tag(d, w * .66, 5, "IRAN FIRES")
     tag(d, 4, h - 16, "BAHRAIN + 2 TANKERS HIT")
@@ -270,6 +339,14 @@ def s_ship(d, w, h):
         d.line((dx - 7, dy, dx + 7, dy), fill=INK, width=2)
         d.ellipse((dx - 2, dy - 2, dx + 2, dy + 2), fill="#D9D5CA")
         d.line((dx, dy + 2, w * .50, h * .50), fill=RED, width=1)
+    _flag(d, 6, 20, 13, 9, ["#FFFFFF", "#003580", "#FFFFFF"])
+    d.line((12.5, 20, 12.5, 29), fill="#003580", width=2)
+    d.line((6, 24.5, 19, 24.5), fill="#003580", width=2)
+    txt(d, (6, 32), "FINLAND", F["art_s"], "#FFFFFF")
+    _flag(d, w - 25, 20, 15, 9, ["#FFFFFF", "#0039A6", "#D52B1E"])
+    txt(d, (w - 4, 16), "RUSSIA", F["art_s"], "#FFFFFF", "ra")
+    for yy in range(22, int(h * .80), 8):
+        d.line((w * .62, yy, w * .62, yy + 4), fill="#9AA3A8")
     pill(d, 3, 3, "06:50 UTC · GULF OF FINLAND", F["art_s"])
     tag(d, 3, h - 15, "DRONE STRIKE · 16 SAFE")
 
@@ -370,6 +447,10 @@ def s_jets(d, w, h):
         d.line((x, y + 1, x - 3, y + 6), fill=INK, width=1)
     for x in (w * .66, w * .72):
         d.polygon([(x - 5, h * .68), (x + 6, h * .68), (x, h * .72)], fill="#2E5B9A")
+    _flag(d, 8, 20, 14, 9, ["#DE2910"])
+    txt(d, (8, 32), "CHINA", F["art_s"], INK)
+    _flag(d, w - 36, 16, 16, 10, ["#FE0000", "#FFFFFF", "#000095"])
+    txt(d, (w - 62, 40), "TAIWAN", F["art_s"], INK)
     pill(d, 3, 3, "21 NOV · TAIPEI", F["art_s"])
     tag(d, 3, h - 15, "21 JETS CROSS MEDIAN LINE")
 
@@ -404,7 +485,8 @@ def s_rugby(d, w, h):
         _person(d, x, h * .55, 1.5, c)
     d.rectangle((w * .06, h * .04, w * .58, h * .22), fill=INK)
     txt(d, (w * .32, h * .13), "ENG 37-12 NZL", F["art_s"], "#FFFFFF", "mm")
-    pill(d, 3, h - 15, "TWICKENHAM · RECORD MARGIN", F["art_s"])
+    pill(d, w * .64, 4, "21 NOV", F["art_s"])
+    tag(d, 3, h - 15, "TWICKENHAM · RECORD MARGIN")
 
 
 def s_crypto(d, w, h):
@@ -427,9 +509,10 @@ SCENES = {
 }
 
 
-def art(scene, w, h):
-    im = Image.new("RGB", (w, h), rgb(PAPER))
-    SCENES[scene](ImageDraw.Draw(im), w, h)
+def art(scene, w, h, scale=1):
+    im = Image.new("RGB", (w * scale, h * scale), rgb(PAPER))
+    drawer = ImageDraw.Draw(im)
+    SCENES[scene](ScaledDraw(drawer, scale) if scale > 1 else drawer, w, h)
     return im
 
 
@@ -544,14 +627,15 @@ def draw_main_cards(im, d):
     for i, s in enumerate([x for x in STORIES if x["size"] == "main"]):
         x = 12 + i * 336
         d.rectangle((x, 198, x + 326, 391), fill=rgb(CARD), outline=rgb(LINE))
-        a = art(s["scene"], 320, 90)
-        im.paste(a, (x + 3, 201))
+        a = art(s["scene"], 320, 90, SS)
+        im.paste(a, ((x + 3) * SS, 201 * SS))
         d.rectangle((x + 3, 293, x + 323, 307), fill=rgb(REGION_COLORS[s["region"] - 1]))
         rrect(d, (x + 7, 293, x + 21, 307), 3, fill="#FFFFFF")
         txt(d, (x + 14, 300), str(s["n"]), F["num"], rgb(REGION_COLORS[s["region"] - 1]), "mm")
-        sw = d.textlength(s["source"], font=F["ms"])
+        agency = s["source"].split(" / ")[0]
+        sw = d.textlength(agency, font=F["ms"])
         txt(d, (x + 26, 302), fit(d, s["kicker"], F["mk"], 281 - sw), F["mk"], "#FFFFFF", "lm")
-        txt(d, (x + 315, 302), s["source"], F["ms"], "#FFFFFF", "rm")
+        txt(d, (x + 315, 302), agency, F["ms"], "#FFFFFF", "rm")
         lines = wrap(d, s["headline"], F["mh"], 312)[:2]
         for j, ln in enumerate(lines):
             txt(d, (x + 7, 310 + j * 21), fit(d, ln, F["mh"], 312), F["mh"], rgb(INK))
@@ -566,14 +650,15 @@ def draw_small_cards(im, d):
         col, row = i % 4, i // 4
         x, y = 12 + col * 252, 395 + row * 166
         d.rectangle((x, y, x + 244, y + 160), fill=rgb(CARD), outline=rgb(LINE))
-        a = art(s["scene"], 238, 80)
-        im.paste(a, (x + 3, y + 4))
+        a = art(s["scene"], 238, 80, SS)
+        im.paste(a, ((x + 3) * SS, (y + 4) * SS))
         d.rectangle((x + 3, y + 86, x + 241, y + 100), fill=rgb(REGION_COLORS[s["region"] - 1]))
         rrect(d, (x + 7, y + 86, x + 21, y + 100), 3, fill="#FFFFFF")
         txt(d, (x + 14, y + 93), str(s["n"]), F["num"], rgb(REGION_COLORS[s["region"] - 1]), "mm")
-        sw = d.textlength(s["source"], font=F["ss"])
+        agency = s["source"].split(" / ")[0]
+        sw = d.textlength(agency, font=F["ss"])
         txt(d, (x + 26, y + 93), fit(d, s["kicker"], F["sk"], 203 - sw), F["sk"], "#FFFFFF", "lm")
-        txt(d, (x + 235, y + 93), s["source"], F["ss"], "#FFFFFF", "rm")
+        txt(d, (x + 235, y + 93), agency, F["ss"], "#FFFFFF", "rm")
         hl = wrap(d, s["headline"], F["sh"], 232)[:2]
         for j, ln in enumerate(hl):
             txt(d, (x + 6, y + 103 + j * 12), fit(d, ln, F["sh"], 232), F["sh"], rgb(INK))
@@ -599,10 +684,11 @@ def draw_lists(d):
             rrect(d, (bx - 10, cy - 2, bx + 10, cy + 16), 3, fill=rgb(REGION_COLORS[s["region"] - 1]), outline="#FFFFFF")
             txt(d, (bx, cy + 7), str(s["n"]), F["num"], "#FFFFFF", "mm")
             tx = x0 + 40
-            hl = wrap(d, s["brief"], F["lh"], 174)[:2]
+            helper = s["source"].split(" / ")[0]
+            hl = wrap(d, s["brief"], F["lh"], 188)[:2]
             for j, ln in enumerate(hl):
-                txt(d, (tx, cy + 1 + j * 9), fit(d, ln, F["lh"], 174), F["lh"], rgb(INK))
-            txt(d, (x1 - 10, cy + 7), s["source"], F["ls"], rgb(MUTED), "rm")
+                txt(d, (tx, cy + j * 9), fit(d, ln, F["lh"], 188), F["lh"], rgb(INK))
+            txt(d, (x1 - 10, cy + 7), helper, F["ls"], rgb(MUTED), "rm")
     return rows
 
 
@@ -611,14 +697,14 @@ def draw_date_check(d):
     d.rectangle((18, 977, 68, 999), fill=rgb(RED))
     txt(d, (43, 984), "DATE", F["idx"], "#FFFFFF", "mm")
     txt(d, (43, 994), "CHECK", F["idx"], "#FFFFFF", "mm")
-    txt(d, (76, 978), fit(d, DATE_LINE_1, F["date"], 928), F["date"], rgb(INK))
-    txt(d, (76, 990), fit(d, DATE_LINE_2, F["date"], 928), F["date"], rgb(INK))
-    txt(d, (1012, 1011), SOURCE_LINE, F["src"], rgb(INK), "rm")
+    txt(d, (76, 976), fit(d, DATE_LINE_1, F["date"], 928), F["date"], rgb(INK))
+    txt(d, (76, 992), fit(d, DATE_LINE_2, F["date"], 928), F["date"], rgb(INK))
+    txt(d, (1012, 1009), SOURCE_LINE, F["src"], rgb(INK), "rm")
 
 
 def build():
-    im = Image.new("RGB", (1024, 1024), rgb(PAPER))
-    d = ImageDraw.Draw(im)
+    im = Image.new("RGB", (1024 * SS, 1024 * SS), rgb(PAPER))
+    d = ScaledDraw(ImageDraw.Draw(im), SS)
     draw_header(d)
     draw_main_cards(im, d)
     draw_small_cards(im, d)
@@ -655,7 +741,7 @@ def build():
 
     draw_lists(d)
     draw_date_check(d)
-    return im
+    return im.resize((1024, 1024), Image.LANCZOS)
 
 
 if __name__ == "__main__":
