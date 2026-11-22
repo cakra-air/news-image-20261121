@@ -182,8 +182,10 @@ STORIES = [
 ]
 
 DATE_CHECK = (
-    "Left out: UK–EU deal & Cyclone Akvari (20 Nov); Voyager signal (18 Nov); "
-    "BepiColombo orbit (not confirmed as 21 Nov); 2035 religion forecast (a projection)."
+    "Left out as Friday 20 November's news: the UK–EU trade reset and Cyclone Akvari's "
+    "landfill. Older still: Voyager 1's signal (18 Nov). Not confirmed as a 21 Nov event, "
+    "so not shown: BepiColombo's Mercury orbit. A 2035 religion forecast is a projection, "
+    "not that day's news."
 )
 
 SOURCES_LINE = (

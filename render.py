@@ -388,18 +388,24 @@ def build(out="entry.png"):
             yy += 12
         put(d, (x + 100, y + 131), s["source"], font(8, True), rgb(REGION_COLORS[s["region"]]))
 
-    map_panel(d, (12, 680, 392, 946))
-    list_panel(d, (400, 680, W - 12, 946))
+    map_panel(d, (12, 680, 392, 930))
+    list_panel(d, (400, 680, W - 12, 930))
 
-    # Red box: DATE CHECK on top, EVERY STORY below it. Source sits outside,
-    # under the box, close to the bottom edge.
-    d.rounded_rectangle([12, 950, W - 12, 992], radius=3,
-                        fill="#FBF1EE", outline=rgb(RED), width=2)
-    put(d, (20, 961), "DATE CHECK — " + DATE_CHECK, font(8), rgb(RED))
-    put(d, (20, 981),
-        "Every story happened, or was first reported, on Saturday 21 November 2026.",
-        font(8), INK)
-    put(d, (12, 1009), SOURCES_LINE, font(7.5), MUTED)
+    # Top-1 style: a slim red rule around one flowing DATE CHECK paragraph,
+    # the label sitting inline in red, then two quiet lines underneath.
+    d.rectangle([12, 934, W - 12, 974], fill="#FBF6EE", outline=rgb(RED), width=1)
+    label = "DATE CHECK  "
+    fl, fb = font(9, True), font(8)
+    put(d, (20, 942), label, fl, rgb(RED))
+    indent = 20 + d.textlength(label, font=fl)
+    lines = wrap(DATE_CHECK, fb, 700, d)
+    for i, ln in enumerate(lines[:3]):
+        put(d, (20 if i else indent, 942 + i * 11), ln, fb, INK)
+    put(d, (12, 987),
+        "Every story happened, or was first reported, on Saturday 21 November 2026. "
+        "Official counts and claims are attributed.",
+        font(7), MUTED)
+    put(d, (12, 1006), SOURCES_LINE, font(6.5), MUTED)
 
     im.save(out, "PNG", optimize=True)
     return out
