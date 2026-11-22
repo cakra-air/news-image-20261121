@@ -114,18 +114,50 @@ def chip(d, x, y, label, color="#2E7D4F"):
 
 
 # --------------------------------------------------------------------------
-# Original vector illustrations
+# Original vector illustrations. Every artwork carries three things inside it:
+# WHEN (a clock pill), WHERE (place label) and WHAT (the event, drawn + tagged).
 # --------------------------------------------------------------------------
+def pill(d, x, y, text, font=None, bg=INK, fg="#FFFFFF"):
+    """Contrasting label drawn inside the artwork, so the picture explains itself."""
+    f = font or F["art_s"]
+    w = d.textlength(text, font=f)
+    d.rounded_rectangle((x, y, x + w + 8, y + f.size + 4), radius=2, fill=rgb(bg))
+    d.text((x + 4, y + 1), text, font=f, fill=fg)
+    return x + w + 8
+
+
+def tag(d, x, y, text, bg="#9E1F1F", font=None, fg="#FFFFFF"):
+    return pill(d, x, y, text, font or F["art_s"], bg, fg)
+
+
+def clock(d, x, y, r, hour, minute):
+    d.ellipse((x - r, y - r, x + r, y + r), fill="#FFFFFF", outline=INK)
+    for k in range(12):
+        a = math.pi / 2 - k * math.pi / 6
+        d.line((x + (r - 3) * math.cos(a), y - (r - 3) * math.sin(a),
+                x + r * math.cos(a), y - r * math.sin(a)), fill=INK)
+    a = math.pi / 2 - (hour % 12 + minute / 60) * math.pi / 6
+    d.line((x, y, x + (r - 5) * math.cos(a), y - (r - 5) * math.sin(a)), fill=RED, width=2)
+    a = math.pi / 2 - minute * math.pi / 30
+    d.line((x, y, x + (r - 2) * math.cos(a), y - (r - 2) * math.sin(a)), fill=INK)
+
+
 def _ship(d, x, y, s=1.0, fire=False):
-    d.polygon([(x - 15 * s, y), (x + 15 * s, y), (x + 11 * s, y + 7 * s), (x - 11 * s, y + 7 * s)], fill=INK)
-    d.rectangle((x - 7 * s, y - 7 * s, x + 4 * s, y), fill="#CFCBC0")
-    d.rectangle((x + 5 * s, y - 4 * s, x + 9 * s, y), fill="#8A857B")
+    d.polygon([(x - 18 * s, y), (x + 18 * s, y), (x + 14 * s, y + 8 * s),
+               (x - 14 * s, y + 8 * s)], fill=INK)
+    d.rectangle((x - 12 * s, y - 6 * s, x + 10 * s, y), fill="#CFCBC0")
+    for i in range(3):
+        d.rectangle((x - 10 * s + i * 7 * s, y - 4 * s, x - 5 * s + i * 7 * s, y - 1 * s),
+                    fill=["#2E5B9A", "#B4674A", "#F2C14E"][i])
+    d.rectangle((x + 10 * s, y - 10 * s, x + 16 * s, y), fill="#E9E4D8")
+    d.rectangle((x + 11 * s, y - 9 * s, x + 15 * s, y - 6 * s), fill="#4A6E8A")
+    d.line((x + 13 * s, y - 10 * s, x + 13 * s, y - 18 * s), fill=INK, width=1)
     if fire:
-        d.polygon([(x - 4 * s, y - 7 * s), (x, y - 17 * s), (x + 4 * s, y - 7 * s)], fill="#E2672A")
-        d.polygon([(x - 2 * s, y - 7 * s), (x, y - 13 * s), (x + 2 * s, y - 7 * s)], fill="#F2C14E")
-        for k in range(3):
-            d.ellipse((x + 6 * s + k * 4 * s, y - 16 * s - k * 3 * s,
-                       x + 12 * s + k * 4 * s, y - 10 * s - k * 3 * s), fill="#9A958C")
+        d.polygon([(x - 8 * s, y - 6 * s), (x - 4 * s, y - 20 * s), (x, y - 8 * s)], fill="#E2672A")
+        d.polygon([(x - 1 * s, y - 6 * s), (x + 3 * s, y - 16 * s), (x + 6 * s, y - 6 * s)], fill="#F2C14E")
+        for k in range(4):
+            d.ellipse((x + 6 * s + k * 4 * s, y - 20 * s - k * 3 * s,
+                       x + 12 * s + k * 4 * s, y - 14 * s - k * 3 * s), fill="#9A958C")
 
 
 def _flag(d, x, y, w, h, bands, vertical=False):
@@ -144,161 +176,211 @@ def _person(d, x, y, s, shirt):
 
 
 def s_gulf(d, w, h):
+    """Bahrain / Hormuz, 05:00 UTC — plant burns, two tankers under Iranian fire."""
     d.rectangle((0, 0, w, h), fill=rgb(OCEAN))
-    d.polygon([(0, 0), (w * .22, 0), (w * .17, h * .62), (0, h)], fill=rgb(LAND))
-    d.polygon([(w * .80, 0), (w, 0), (w, h), (w * .87, h * .7)], fill=rgb(LAND))
-    d.ellipse((w * .36, h * .50, w * .45, h * .72), fill=rgb(LAND), outline=rgb(COAST))
-    _ship(d, w * .57, h * .34, 1.0, True)
-    _ship(d, w * .68, h * .58, .8, False)
-    for ex, ey in ((w * .55, h * .44), (w * .70, h * .72)):
-        d.line((w * .44, h * .60, ex, ey), fill=RED, width=1)
+    d.polygon([(0, 0), (w * .20, 0), (w * .15, h * .65), (0, h)], fill=rgb(LAND))
+    d.polygon([(w * .82, 0), (w, 0), (w, h), (w * .88, h * .7)], fill=rgb(LAND))
+    d.line((w * .20, 0, w * .15, h * .65, 0, h), fill=rgb(COAST))
+    d.line((w * .82, 0, w, h, w * .88, h * .7), fill=rgb(COAST))
+    d.ellipse((w * .30, h * .52, w * .40, h * .76), fill=rgb(LAND), outline=rgb(COAST))
+    d.rectangle((w * .32, h * .60, w * .36, h * .68), fill="#8A857B")
+    d.rectangle((w * .345, h * .52, w * .353, h * .61), fill="#8A857B")
+    d.polygon([(w * .34, h * .50), (w * .30, h * .40), (w * .34, h * .44),
+               (w * .38, h * .39), (w * .36, h * .50)], fill="#E2672A")
+    _ship(d, w * .55, h * .42, 1.0, True)
+    _ship(d, w * .70, h * .67, .85, False)
+    for ex, ey in ((w * .55, h * .34), (w * .70, h * .60)):
+        d.line((w * .86, h * .30, ex, ey), fill=RED, width=1)
         d.ellipse((ex - 2, ey - 2, ex + 2, ey + 2), fill=RED)
-    d.ellipse((w * .40, h * .55, w * .47, h * .67), outline=RED, width=2)
-    txt(d, (5, 4), "05:00 UTC  ·  STRAIT OF HORMUZ", F["art_l"], INK)
-    txt(d, (w - 4, h - 10), "SAUDI ARABIA        IRAN", F["art_s"], MUTED, "ra")
+    d.ellipse((w * .68, h * .57, w * .72, h * .63), outline=RED, width=2)
+    txt(d, (w * .04, h * .16), "SAUDI ARABIA", F["art_s"], MUTED)
+    pill(d, 4, 3, "05:00 UTC · STRAIT OF HORMUZ", F["art_l"])
+    tag(d, 4, h - 16, "2 TANKERS HIT")
+    tag(d, w * .84, h - 16, "IRAN")
 
 
 def s_cop(d, w, h):
+    """Antalya 22:10 UTC — day 13 clock past midnight, delegates still split."""
     d.rectangle((0, 0, w, h), fill="#E8EFE3")
     for i in range(13):
-        x = 8 + i * 13
-        fill = "#DDE7D6" if i < 12 else RED
-        d.rectangle((x, 16, x + 10, 30), fill=fill, outline=MUTED)
-    txt(d, (8, 6), "NOVEMBER 2026 · DAY 13 → 21", F["art_s"], INK)
-    d.rectangle((w - 30, 12, w - 22, 48), fill="#FFFFFF", outline=MUTED)
-    d.rectangle((w - 28, 30, w - 24, 46), fill=RED)
-    d.ellipse((w - 32, 8, w - 20, 20), fill=RED)
-    for i in range(3):
-        x = 16 + i * 26
-        d.rectangle((x, h - 26, x + 16, h - 8), fill="#9C8A64")
-        d.line((x, h - 26, x + 16, h - 8), fill=RED, width=2)
-    d.rectangle((w * .48, h - 30, w * .78, h - 8), fill="#CFCBC0")
-    for i in range(4):
-        _person(d, w * .52 + i * 18, h - 14, 1.0, ["#3F6EA8", "#7D4C9E", "#3F8F4F", "#9E1F1F"][i])
-    txt(d, (5, h - 10), "22:10 UTC  ·  ANTALYA", F["art_s"], INK)
+        x = 6 + i * 23
+        d.rectangle((x, 15, x + 18, 29), fill=RED if i == 12 else "#DDE7D6", outline=MUTED)
+        txt(d, (x + 9, 22), str(9 + i), F["art_s"], "#FFFFFF" if i == 12 else INK, "mm")
+    clock(d, w - 28, 50, 13, 22, 10)
+    txt(d, (w - 44, 68), "22:10 UTC", F["art_s"], INK)
+    d.ellipse((w * .30, h * .52, w * .72, h * .90), fill="#CFCBC0", outline=MUTED)
+    for i in range(5):
+        _person(d, w * .34 + i * w * .075, h * .60, 1.0,
+                ["#3F6EA8", "#7D4C9E", "#3F8F4F", "#9E1F1F", "#B4674A"][i])
+    d.rectangle((w * .04, h * .60, w * .25, h * .84), fill="#FFFFFF", outline=MUTED)
+    d.line((w * .06, h * .66, w * .23, h * .66), fill=MUTED)
+    d.line((w * .06, h * .72, w * .19, h * .72), fill=MUTED)
+    pill(d, 4, 3, "22:10 UTC · ANTALYA", F["art_s"])
+    tag(d, 4, h - 15, "NO TEXT · SUN 05:00 GMT")
 
 
 def s_quake(d, w, h):
-    d.rectangle((0, 0, w, h * .42), fill="#DCE7EF")
-    d.rectangle((0, h * .42, w, h), fill="#D9C9A7")
-    d.polygon([(0, h * .45), (w * .25, h * .16), (w * .45, h * .45)], fill="#A9966F")
-    d.polygon([(w * .50, h * .45), (w * .72, h * .20), (w, h * .45)], fill="#A9966F")
-    ex, ey = w * .52, h * .78
-    d.ellipse((ex - 4, ey - 4, ex + 4, ey + 4), fill=RED)
-    for r in (12, 24, 38):
-        d.arc((ex - r, ey - r, ex + r, ey + r), 200, 340, fill=RED, width=2)
-    for i in range(5):
-        x = w * .62 + i * 10
-        d.rectangle((x, h * .40 - (i % 2) * 8, x + 6, h * .50), fill="#7A7A7A")
-    txt(d, (5, 4), "00:09 UTC  ·  USGS M6.7  ·  108 KM", F["art_l"], INK)
+    """Lima 00:09 UTC — M6.7 at 108 km, epicentre ring and shaking skyline."""
+    d.rectangle((0, 0, w, h * .40), fill="#DCE7EF")
+    d.rectangle((0, h * .40, w, h), fill="#D9C9A7")
+    d.polygon([(0, h * .42), (w * .20, h * .14), (w * .40, h * .42)], fill="#A9966F")
+    d.polygon([(w * .44, h * .42), (w * .66, h * .18), (w * .84, h * .42)], fill="#A9966F")
+    for i in range(6):
+        x = w * .55 + i * 14
+        hh = 14 + (i % 3) * 5
+        d.polygon([(x, h * .50 - hh), (x + 10, h * .50 - hh + 3),
+                   (x + 10, h * .50 + 2), (x, h * .50)], fill="#7A7A7A")
+    ex, ey = w * .30, h * .68
+    d.ellipse((ex - 3, ey - 3, ex + 3, ey + 3), fill=RED)
+    for r in (10, 20, 32):
+        d.arc((ex - r, ey - r, ex + r, ey + r), 210, 330, fill=RED, width=2)
+    d.line((ex, ey, ex, h * .44), fill=RED)
+    txt(d, (ex + 4, h * .45), "108 KM", F["art_s"], RED)
+    pill(d, 4, 3, "00:09 UTC · LIMA, PERU", F["art_l"])
+    tag(d, w - 88, h - 16, "USGS M6.7")
+    txt(d, (4, h - 12), "NO TSUNAMI", F["art_s"], INK)
 
 
 def s_ship(d, w, h):
+    """Gulf of Finland 06:50 UTC — drones set the Sparta II ablaze."""
     d.rectangle((0, 0, w, h), fill="#1E3A4C")
-    d.polygon([(0, h), (0, h - 20), (w * .22, h - 32), (w * .34, h)], fill="#3B4A46")
-    _ship(d, w * .55, h * .56, 1.35, True)
-    d.polygon((w * .80, 16, w * .86, 20, w * .83, 26, w * .77, 22), fill="#D9D5CA")
-    d.line((w * .83, 22, w * .70, h * .42), fill=RED, width=1)
-    txt(d, (5, 4), "06:50 UTC  ·  GULF OF FINLAND", F["art_s"], "#FFFFFF")
+    d.polygon([(0, h), (0, h - 16), (w * .20, h - 28), (w * .32, h)], fill="#3B4A46")
+    for i in range(4):
+        x = 8 + i * 12
+        d.polygon([(x, h - 24), (x + 5, h - 40), (x + 10, h - 24)], fill="#2E4A3A")
+    _ship(d, w * .50, h * .60, 1.15, True)
+    for dx, dy in ((w * .74, h * .26), (w * .86, h * .44)):
+        d.line((dx - 7, dy, dx + 7, dy), fill=INK, width=2)
+        d.ellipse((dx - 2, dy - 2, dx + 2, dy + 2), fill="#D9D5CA")
+        d.line((dx, dy + 2, w * .50, h * .50), fill=RED, width=1)
+    pill(d, 3, 3, "06:50 UTC · GULF OF FINLAND", F["art_s"])
+    tag(d, 3, h - 15, "DRONE STRIKE · 16 SAFE")
 
 
 def s_capture(d, w, h):
+    """Guasave 02:00 UTC — soldiers cuff El Chapo Isidro, 11 dead in exchanges."""
     d.rectangle((0, 0, w, h), fill="#263C2A")
-    for i in range(9):
-        x = i * 28
-        d.ellipse((x, -10, x + 36, 34), fill="#355239")
-    _flag(d, w - 34, 6, 26, 16, ["#CE1126", "#FFFFFF", "#CE1126"])
-    for i, sx in enumerate((w * .40, w * .52, w * .64)):
-        _person(d, sx, h * .78, 1.2, "#6B705C")
-    _person(d, w * .55, h * .70, 1.3, "#1F2933")
-    d.rectangle((w * .51, h * .74, w * .59, h * .78), outline="#E8B23A", width=2)
-    txt(d, (5, 4), "02:00 UTC  ·  GUASAVE, SINALOA", F["art_s"], "#FFFFFF")
+    for i in range(10):
+        d.ellipse((i * 26 - 10, -12, i * 26 + 28, 30), fill="#355239")
+    _flag(d, w - 40, 5, 30, 18, ["#CE1126", "#FFFFFF", "#CE1126"])
+    d.rectangle((w * .06, h * .52, w * .30, h * .78), fill="#8A857B")
+    d.rectangle((w * .10, h * .56, w * .26, h * .64), fill="#4A6E8A")
+    d.ellipse((w * .10, h * .74, w * .16, h * .80), fill=INK)
+    d.ellipse((w * .22, h * .74, w * .28, h * .80), fill=INK)
+    for sx in (w * .42, w * .52, w * .70, w * .80):
+        _person(d, sx, h * .76, 1.15, "#6B705C")
+    _person(d, w * .60, h * .72, 1.3, "#1F2933")
+    d.line((w * .57, h * .74, w * .63, h * .74), fill="#E8B23A", width=2)
+    pill(d, 3, 3, "02:00 UTC · GUASAVE, SINALOA", F["art_s"])
+    tag(d, 3, h - 15, "ARREST · 11 DEAD")
 
 
 def s_robot(d, w, h):
+    """Geneva, 128 states — treaty text and a robot under a red ban sign."""
     d.rectangle((0, 0, w, h), fill="#E9EEF4")
     for i in range(6):
-        _flag(d, 10 + i * 16, 8, 12, 8, ["#2E5B9A", "#F2C14E", "#C0392B"][:1 + i % 3])
-    d.rectangle((w * .18, h * .38, w * .48, h * .88), fill="#FFFFFF", outline=MUTED)
+        _flag(d, 8 + i * 15, 5, 12, 8, ["#2E5B9A"])
+    d.rectangle((w * .12, h * .34, w * .50, h * .88), fill="#FFFFFF", outline=MUTED)
     for j in range(4):
-        d.line((w * .21, h * .48 + j * 9, w * .44, h * .48 + j * 9), fill=MUTED)
-    d.rectangle((w * .58, h * .32, w * .80, h * .82), fill="#6C8EBF", outline=INK)
-    d.ellipse((w * .62, h * .40, w * .76, h * .54), fill="#DDE7F2")
+        d.line((w * .15, h * .44 + j * 8, w * .47, h * .44 + j * 8), fill=MUTED)
+    d.ellipse((w * .16, h * .60, w * .30, h * .80), outline=RED, width=2)
+    txt(d, (w * .23, h * .70), "128", F["art_s"], RED, "mm")
+    d.rectangle((w * .58, h * .34, w * .78, h * .78), fill="#6C8EBF", outline=INK)
+    d.ellipse((w * .62, h * .40, w * .74, h * .54), fill="#DDE7F2")
     d.ellipse((w * .655, h * .45, w * .67, h * .465), fill=INK)
-    d.ellipse((w * .715, h * .45, w * .73, h * .465), fill=INK)
-    d.ellipse((w * .82, h * .20, w * .96, h * .52), outline=RED, width=3)
-    d.line((w * .84, h * .22, w * .94, h * .50), fill=RED, width=3)
-    txt(d, (5, h - 10), "GENEVA · 128 STATES", F["art_s"], INK)
+    d.ellipse((w * .705, h * .45, w * .72, h * .465), fill=INK)
+    d.line((w * .64, h * .66, w * .72, h * .66), fill=INK)
+    d.ellipse((w * .80, h * .20, w * .98, h * .56), outline=RED, width=3)
+    d.line((w * .82, h * .22, w * .96, h * .54), fill=RED, width=3)
+    pill(d, 3, 3, "21 NOV · GENEVA · 128 STATES", F["art_s"])
+    tag(d, 3, h - 15, "BAN AUTOWEAPONS TALKS")
 
 
 def s_space(d, w, h):
+    """Mercury 18:24 UTC — BepiColombo's 37-minute burn after a nine-year trip."""
     d.rectangle((0, 0, w, h), fill="#101A2C")
-    for i in range(24):
-        x = (i * 47) % w
-        y = (i * 29) % h
+    for i in range(30):
+        x, y = (i * 47) % w, (i * 29) % h
         d.ellipse((x, y, x + 1, y + 1), fill="#FFFFFF")
-    cx, cy, r = w * .72, h * .52, h * .26
+    cx, cy, r = w * .74, h * .50, h * .30
     d.ellipse((cx - r, cy - r, cx + r, cy + r), fill="#8C877E", outline="#CFCBC0")
-    for i in range(4):
-        d.ellipse((cx - r * .7 + i * 7, cy - r * .4, cx - r * .5 + i * 7, cy - r * .2), fill="#6E6A63")
-    d.arc((w * .10, h * .10, w * .90, h * .90), 200, 350, fill="#E8B23A", width=1)
-    sx, sy = w * .28, h * .34
+    for i in range(5):
+        d.ellipse((cx - r * .7 + i * 8, cy - r * .5, cx - r * .5 + i * 8, cy - r * .2), fill="#6E6A63")
+    d.arc((cx - r * .6, cy - r * .6, cx + r * .6, cy + r * .6), 20, 160, fill="#5E5A55")
+    d.arc((w * .06, h * .06, w * .94, h * .96), 195, 345, fill="#E8B23A", width=2)
+    sx, sy = w * .30, h * .34
     d.rectangle((sx - 10, sy - 3, sx + 10, sy + 3), fill="#E8B23A")
-    d.rectangle((sx - 18, sy - 7, sx - 11, sy + 7), fill="#2E5B9A")
-    d.rectangle((sx + 11, sy - 7, sx + 18, sy + 7), fill="#2E5B9A")
-    d.polygon([(sx - 2, sy + 3), (sx + 2, sy + 3), (sx, sy + 13)], fill="#E2672A")
-    d.line((sx, sy + 13, cx - r, cy), fill="#F2C14E")
-    txt(d, (5, 4), "18:24 UTC  ·  37-MIN BURN", F["art_s"], "#FFFFFF")
+    d.rectangle((sx - 20, sy - 8, sx - 12, sy + 8), fill="#2E5B9A")
+    d.rectangle((sx + 12, sy - 8, sx + 20, sy + 8), fill="#2E5B9A")
+    d.polygon([(sx - 2, sy + 3), (sx + 2, sy + 3), (sx, sy + 14)], fill="#E2672A")
+    d.line((sx, sy + 14, cx - r, cy), fill="#F2C14E")
+    pill(d, 3, 3, "18:24 UTC · MERCURY ORBIT", F["art_s"])
+    tag(d, 3, h - 15, "9-YEAR TRIP · 37-MIN BURN")
 
 
 def s_jets(d, w, h):
+    """Taipei, 21 jets across the median line — Taiwan scrambles."""
     d.rectangle((0, 0, w, h), fill=rgb(OCEAN))
-    d.polygon([(0, 0), (w * .30, 0), (w * .26, h), (0, h)], fill=rgb(LAND))
-    d.polygon([(w * .72, 0), (w, 0), (w, h), (w * .76, h)], fill=rgb(LAND))
+    d.polygon([(0, 0), (w * .26, 0), (w * .22, h), (0, h)], fill=rgb(LAND))
+    d.polygon([(w * .78, h * .10), (w * .92, h * .18), (w * .90, h * .70),
+               (w * .80, h * .88), (w * .76, h * .55)], fill=rgb(LAND), outline=rgb(COAST))
     d.line((w * .50, 0, w * .50, h), fill=RED, width=1)
-    for i in range(5):
-        x, y = w * .42 + i * 16, h * .25 + (i % 2) * 22
-        d.polygon([(x - 5, y), (x + 6, y), (x, y + 3)], fill=INK)
-        d.line((x, y + 1, x - 3, y + 7), fill=INK, width=1)
-    txt(d, (5, 4), "21 JETS  ·  MEDIAN LINE", F["art_s"], INK)
+    for i in range(21):
+        x = w * .30 + (i % 7) * w * .055
+        y = h * .18 + (i // 7) * h * .22
+        d.polygon([(x - 4, y), (x + 5, y), (x, y + 3)], fill=INK)
+        d.line((x, y + 1, x - 3, y + 6), fill=INK, width=1)
+    for x in (w * .66, w * .72):
+        d.polygon([(x - 5, h * .68), (x + 6, h * .68), (x, h * .72)], fill="#2E5B9A")
+    pill(d, 3, 3, "21 NOV · TAIPEI", F["art_s"])
+    tag(d, 3, h - 15, "21 JETS CROSS MEDIAN LINE")
 
 
 def s_trade(d, w, h):
+    """Brussels 09:42 UTC — EU and Indonesia sign; tariffs fall 98.5%."""
     d.rectangle((0, 0, w, h), fill="#EEF0E8")
-    _flag(d, 12, 12, 34, 22, ["#2E5B9A"] + ["#F2C14E"] * 12, vertical=False)
+    _flag(d, 10, 10, 32, 20, ["#2E5B9A"] + ["#F2C14E"] * 12)
     for i in range(12):
         a = 2 * math.pi * i / 12
-        d.ellipse((12 + 17 + 8 * math.cos(a) - 1.5, 23 + 8 * math.sin(a) - 1.5,
-                   12 + 17 + 8 * math.cos(a) + 1.5, 23 + 8 * math.sin(a) + 1.5), fill="#F2C14E")
-    _flag(d, w - 48, 12, 34, 22, ["#CE1126", "#FFFFFF"])
-    d.rectangle((w * .40, h * .30, w * .62, h * .84), fill="#FFFFFF", outline=MUTED)
-    d.line((w * .45, h * .45, w * .57, h * .45), fill=INK, width=2)
-    d.line((w * .45, h * .55, w * .57, h * .55), fill=INK, width=2)
-    for i in range(5):
-        d.rectangle((12 + i * 13, h - 16, 22 + i * 13, h - 6), fill=["#5B7FA6", "#B4674A", "#7D8C6A"][i % 3])
-    txt(d, (5, 4), "09:42 UTC  ·  TARIFFS −98.5%", F["art_s"], INK)
+        cx, cy = 26, 20
+        d.ellipse((cx + 7 * math.cos(a) - 1, cy + 6 * math.sin(a) - 1,
+                   cx + 7 * math.cos(a) + 1, cy + 6 * math.sin(a) + 1), fill="#F2C14E")
+    _flag(d, w - 42, 10, 32, 20, ["#CE1126", "#FFFFFF"])
+    d.rectangle((w * .40, h * .28, w * .64, h * .86), fill="#FFFFFF", outline=MUTED)
+    for j in range(3):
+        d.line((w * .43, h * .40 + j * 8, w * .61, h * .40 + j * 8), fill=MUTED)
+    d.line((w * .50, h * .62, w * .60, h * .74), fill="#2E5B9A", width=2)
+    for i, hg in enumerate((18, 12, 7)):
+        d.rectangle((w * .70 + i * 12, h * .80 - hg, w * .70 + i * 12 + 8, h * .80), fill="#7D8C6A")
+    pill(d, 3, 3, "09:42 UTC · BRUSSELS", F["art_s"])
+    tag(d, 3, h - 15, "EU–INDONESIA FTA · −98.5%")
 
 
 def s_rugby(d, w, h):
+    """Twickenham — England 37–12 New Zealand, the record winning margin."""
     d.rectangle((0, 0, w, h), fill="#3F7A4E")
-    d.line((0, h * .25, w, h * .25), fill="#FFFFFF")
-    d.line((w * .80, 6, w * .80, h * .60), fill="#FFFFFF", width=2)
-    d.line((w * .72, h * .30, w * .88, h * .30), fill="#FFFFFF", width=2)
+    d.line((0, h * .28, w, h * .28), fill="#FFFFFF")
+    d.line((w * .80, 4, w * .80, h * .62), fill="#FFFFFF", width=2)
+    d.line((w * .72, h * .28, w * .88, h * .28), fill="#FFFFFF", width=2)
     d.ellipse((w * .38, h * .42, w * .50, h * .62), fill="#8A5A2B", outline="#FFFFFF")
-    _person(d, w * .18, h * .70, 1.5, "#FFFFFF")
-    _person(d, w * .30, h * .64, 1.5, "#1B1B1B")
-    txt(d, (5, 4), "TWICKENHAM · 37–12", F["art_s"], "#FFFFFF")
+    for x, c in ((w * .16, "#FFFFFF"), (w * .28, "#1B1B1B"), (w * .60, "#FFFFFF")):
+        _person(d, x, h * .72, 1.5, c)
+    d.rectangle((w * .06, h * .04, w * .58, h * .22), fill=INK)
+    txt(d, (w * .32, h * .13), "ENG 37 – 12 NZL", F["art_s"], "#FFFFFF", "mm")
+    pill(d, 3, h - 15, "TWICKENHAM · RECORD MARGIN", F["art_s"])
 
 
 def s_crypto(d, w, h):
+    """New York 20:00 UTC — $55,100 low, then an 8% same-day rebound."""
     d.rectangle((0, 0, w, h), fill="#1C2431")
-    pts = [(8, 26), (40, 30), (70, 22), (95, 48), (120, 56), (150, 30), (180, 24), (w - 8, 18)]
+    pts = [(6, 26), (38, 30), (66, 22), (92, 46), (118, 56), (146, 32), (176, 24), (w - 6, 18)]
     d.line(pts, fill="#E2672A", width=2)
     d.ellipse((w * .44, 18, w * .55, 40), fill="#E8B23A", outline="#FFFFFF")
     txt(d, (w * .495, 29), "B", F["art_l"], "#7A4E12", "mm")
     d.polygon([(104, 40), (114, 50), (94, 50)], fill="#E2672A")
     d.polygon([(170, 32), (180, 20), (160, 24)], fill="#5FA777")
-    txt(d, (5, h - 10), "$55,100 LOW  ·  +8% REBOUND", F["art_s"], "#FFFFFF")
+    pill(d, 3, 3, "20:00 UTC · NEW YORK", F["art_s"])
+    tag(d, 3, h - 15, "$55,100 LOW · +8% REBOUND")
 
 
 SCENES = {
@@ -310,8 +392,7 @@ SCENES = {
 
 def art(scene, w, h):
     im = Image.new("RGB", (w, h), rgb(PAPER))
-    d = ImageDraw.Draw(im)
-    SCENES[scene](d, w, h)
+    SCENES[scene](ImageDraw.Draw(im), w, h)
     return im
 
 
@@ -502,7 +583,7 @@ def build():
     rrect(d, (12, 720, 1012, 970), 4, fill=rgb(PANEL), outline=rgb(LINE), width=1)
     d.rectangle((20, 724, 94, 738), fill=rgb(RED))
     txt(d, (57, 731), "INDEX", F["idx"], "#FFFFFF", "mm")
-    txt(d, (102, 731), "ALSO ON SATURDAY 21 NOVEMBER — 26 MORE STORIES, RANKED BY CONSEQUENCE",
+    txt(d, (102, 731), "ALSO ON SATURDAY 21 NOVEMBER — 19 MORE STORIES, RANKED BY CONSEQUENCE",
         F["lab"], rgb(INK), "lm")
     d.line((12, 742, 1012, 742), fill=rgb(LINE))
     rrect(d, (316, 748, 708, 968), 6, outline=rgb(LINE), width=1)
