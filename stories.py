@@ -182,11 +182,10 @@ STORIES = [
 ]
 
 DATE_CHECK = (
-    "Left out as Friday 20 November's news: the UK–EU trade reset, Cyclone Akvari's landfill "
-    "and the Russian barrage on Kyiv's bridges that preceded Saturday's strikes. Older still: "
-    "Voyager 1's signal (18 Nov). Not confirmed as a 21 Nov event, so not shown: BepiColombo "
-    "entering Mercury orbit and a final COP31 text. A 2035 religion forecast is a projection, "
-    "not that day's news."
+    "Left out: the UK–EU trade reset, Cyclone Akvari's landfill and the Russian barrage on "
+    "Kyiv's bridges — all reported the day before. Voyager 1's signal is older still. Not "
+    "confirmed as a same-day event, so not shown: BepiColombo entering Mercury orbit and a "
+    "final COP31 text. A 2035 religion forecast is a projection, not the day's news."
 )
 
 SOURCES_LINE = (
