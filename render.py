@@ -176,35 +176,43 @@ def _person(d, x, y, s, shirt):
 
 
 def s_gulf(d, w, h):
-    """Bahrain / Hormuz, 05:00 UTC — plant burns, two tankers under Iranian fire."""
+    """Bahrain / Hormuz, 05:00 UTC — Iran strikes Bahrain and fires on two tankers."""
     d.rectangle((0, 0, w, h), fill=rgb(OCEAN))
-    d.polygon([(0, 0), (w * .20, 0), (w * .15, h * .65), (0, h)], fill=rgb(LAND))
-    d.polygon([(w * .82, 0), (w, 0), (w, h), (w * .88, h * .7)], fill=rgb(LAND))
-    d.line((w * .20, 0, w * .15, h * .65, 0, h), fill=rgb(COAST))
-    d.line((w * .82, 0, w, h, w * .88, h * .7), fill=rgb(COAST))
-    d.ellipse((w * .30, h * .52, w * .40, h * .76), fill=rgb(LAND), outline=rgb(COAST))
-    d.rectangle((w * .32, h * .60, w * .36, h * .68), fill="#8A857B")
-    d.rectangle((w * .345, h * .52, w * .353, h * .61), fill="#8A857B")
-    d.polygon([(w * .34, h * .50), (w * .30, h * .40), (w * .34, h * .44),
-               (w * .38, h * .39), (w * .36, h * .50)], fill="#E2672A")
-    _ship(d, w * .55, h * .42, 1.0, True)
-    _ship(d, w * .70, h * .67, .85, False)
-    # Launch site on the Iranian coast: two arrowed missiles fired left into the strait.
-    lx, ly = w * .86, h * .30
+    d.polygon([(0, 0), (w * .18, 0), (w * .14, h * .62), (0, h)], fill=rgb(LAND))
+    d.polygon([(w * .86, 0), (w, 0), (w, h), (w * .90, h * .72)], fill=rgb(LAND))
+    d.line((w * .18, 0, w * .14, h * .62, 0, h), fill=rgb(COAST))
+    d.line((w * .86, 0, w, h, w * .90, h * .72), fill=rgb(COAST))
+    # Bahrain island: an industrial plant with a fresh explosion
+    ix, iy = w * .22, h * .60
+    d.ellipse((ix - 24, iy - 15, ix + 24, iy + 15), fill=rgb(LAND), outline=rgb(COAST))
+    d.rectangle((ix - 16, iy - 3, ix - 5, iy + 8), fill="#8A857B")
+    d.rectangle((ix - 3, iy - 7, ix + 9, iy + 8), fill="#9A958C")
+    d.rectangle((ix + 4, iy - 17, ix + 8, iy - 7), fill="#8A857B")
+    for k in range(3):
+        d.ellipse((ix + 5 + k * 3, iy - 24 - k * 4, ix + 11 + k * 3, iy - 17 - k * 4), fill="#9A958C")
+    bx, by = ix + 2, iy - 10
+    for ang in range(0, 360, 45):
+        a = math.radians(ang)
+        d.line((bx, by, bx + 11 * math.cos(a), by + 11 * math.sin(a)), fill=RED, width=2)
+    d.ellipse((bx - 5, by - 5, bx + 5, by + 5), fill="#F2C14E")
+    txt(d, (ix - 20, iy + 10), "BAHRAIN", F["art_s"], INK)
+    # Iranian launch site: three arrowed missiles — one at Bahrain, two at the tankers
+    lx, ly = w * .88, h * .24
     d.ellipse((lx - 4, ly - 4, lx + 4, ly + 4), fill=RED)
-    for ex, ey in ((w * .55, h * .34), (w * .70, h * .60)):
-        d.line((lx, ly, ex, ey), fill=RED, width=2)
-        a = math.atan2(ey - ly, ex - lx)
+    for tx, ty in ((bx, by), (w * .50, h * .32), (w * .68, h * .58)):
+        d.line((lx, ly, tx, ty), fill=RED, width=2)
+        a = math.atan2(ty - ly, tx - lx)
         for k in (-0.6, 0.6):
-            d.line((ex, ey, ex - 6 * math.cos(a + k), ey - 6 * math.sin(a + k)),
-                   fill=RED, width=2)
-        d.ellipse((ex - 2, ey - 2, ex + 2, ey + 2), fill=RED)
-    d.ellipse((w * .68, h * .57, w * .72, h * .63), outline=RED, width=2)
+            d.line((tx, ty, tx - 6 * math.cos(a + k), ty - 6 * math.sin(a + k)), fill=RED, width=2)
+    _ship(d, w * .50, h * .42, 1.0, True)
+    _ship(d, w * .68, h * .67, .85, False)
+    for cx, cy in ((w * .50, h * .35), (w * .68, h * .60)):
+        d.ellipse((cx - 9, cy - 7, cx + 9, cy + 7), outline=RED, width=2)
     txt(d, (w * .04, h * .16 + 4), "SAUDI ARABIA", F["art_s"], MUTED)
     pill(d, 4, 3, "05:00 UTC · STRAIT OF HORMUZ", F["art_l"])
-    tag(d, w * .70, 5, "IRAN FIRES ←")
-    tag(d, 4, h - 16, "2 TANKERS HIT")
-    tag(d, w * .84, h - 16, "IRAN")
+    tag(d, w * .66, 5, "IRAN FIRES ←")
+    tag(d, 4, h - 16, "BAHRAIN + 2 TANKERS HIT")
+    tag(d, w * .86, h - 16, "IRAN")
 
 
 def s_cop(d, w, h):
