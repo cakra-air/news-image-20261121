@@ -64,6 +64,21 @@ def main():
     row("every story carries a place + time on its card",
         all(s["place"] and (s["kicker"] or s["scene"]) for s in STORIES), "30 datelines")
 
+    # five coordinates checked by hand against the projection:
+    # (story number, expected continent box in projected pixels)
+    mx0, my0, mx1, my1 = 18, 638, 356, 838
+    def proj(lon, lat):
+        return (mx0 + (lon + 180) / 360 * (mx1 - mx0),
+                my0 + (83 - lat) / 141 * (my1 - my0))
+    spots = [(1, (190, 250, 680, 730), "Antalya"), (2, (210, 250, 700, 740), "Riyadh"),
+             (3, (95, 140, 750, 790), "Junin"), (10, (335, 360, 800, 830), "Wellington"),
+             (17, (195, 235, 770, 810), "Pretoria")]
+    for n, (bx0, by0, bx1, by1), label in spots:
+        s = next(x for x in STORIES if x["n"] == n)
+        px, py = proj(s["lon"], s["lat"])
+        row(f"coord spot {label} #{n}", bx0 <= px <= bx1 and by0 <= py <= by1,
+            f"lat={s['lat']} lon={s['lon']} -> ({px:.0f},{py:.0f})")
+
     # ---- 3. 300px font measurement ----------------------------------------
     sizes = {
         "title": 66, "main headline": 16, "main body": 10,
