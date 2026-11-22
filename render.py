@@ -397,9 +397,9 @@ def build(out="entry.png"):
     # Badge on the left; every body line starts at the same x as the first
     # line of content, never under the badge.
     d.rectangle([12, 944, W - 12, 980], fill="#FBF6EE", outline=rgb(RED), width=1)
-    d.rectangle([18, 948, 68, 976], fill="#FFFFFF", outline=rgb(RED), width=1)
-    put(d, (43, 956), "DATE", font(7, True), rgb(RED), anchor="mm")
-    put(d, (43, 968), "CHECK", font(7, True), rgb(RED), anchor="mm")
+    d.rectangle([18, 948, 68, 976], fill=rgb(RED), outline=rgb(RED), width=1)
+    put(d, (43, 956), "DATE", font(7, True), "#FFFFFF", anchor="mm")
+    put(d, (43, 968), "CHECK", font(7, True), "#FFFFFF", anchor="mm")
     tx, ty = 76, 950
     for ln in wrap(DATE_CHECK, font(7.5), W - tx - 20, d)[:2]:
         put(d, (tx, ty), ln, font(7.5), INK)
