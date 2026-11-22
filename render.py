@@ -213,7 +213,7 @@ def map_panel(d, box):
     d.rounded_rectangle(box, radius=4, fill="#FFFDF7", outline=rgb(LINE), width=1)
     put(d, (x0 + 8, y0 + 5), "WHERE IT HAPPENED", font(10, True), INK)
 
-    mx0, my0, mx1, my1 = x0 + 6, y0 + 24, x1 - 6, y1 - 62
+    mx0, my0, mx1, my1 = x0 + 4, y0 + 18, x1 - 4, y1 - 46
     d.rectangle([mx0, my0, mx1, my1], fill=rgb(OCEAN))
     LAT_TOP, LAT_BOT = 83.0, -58.0
 
@@ -280,7 +280,7 @@ def map_panel(d, box):
         badge(d, bx, by, s["n"], col, r=6, fsize=8)
 
     # legend, one tight row like the house front page
-    lx, ly = x0 + 7, y1 - 52
+    lx, ly = x0 + 7, y1 - 40
     for reg in REGIONS:
         cnt = sum(1 for s in STORIES if s["region"] == reg)
         d.ellipse([lx, ly + 2, lx + 7, ly + 7], fill=rgb(REGION_COLORS[reg]))
@@ -376,20 +376,17 @@ def build(out="entry.png"):
         x = 12 + col * (cw + 8)
         y = 390 + row * (ch + 6)
         d.rectangle([x, y, x + cw, y + ch], fill=rgb(CARD), outline=rgb(LINE))
-        scene(d, (x + 4, y + 4, x + 96, y + ch - 4), s)
-        d.rectangle([x + 100, y + 4, x + cw - 4, y + 18], fill=rgb(REGION_COLORS[s["region"]]))
-        put(d, (x + 103, y + 11), s["kicker"], font(8, True), "#FFFFFF", anchor="lm")
-        badge(d, x + cw - 13, y + 11, s["n"], REGION_COLORS[s["region"]], r=6, fsize=8)
-        yy = y + 24
-        for ln in wrap(s["headline"], font(13, True, True), cw - 108, d)[:3]:
-            put(d, (x + 100, yy), ln, font(13, True, True), INK)
-            yy += 16
-        yy = max(yy + 3, y + 76)
-        for ln in wrap(s["body"], font(10), cw - 108, d)[:3]:
-            put(d, (x + 100, yy), ln, font(10), MUTED)
-            yy += 12
-        put(d, (x + 100, y + 151), s["source"], font(7.5), MUTED)
-        chip(d, x + cw - 74, y + 145, s["status"], fill="#E9E2D2", fsize=7)
+        # Three quarters of the card is illustration; the badge sits on it.
+        scene(d, (x + 3, y + 3, x + cw - 3, y + 120), s)
+        d.rectangle([x + 3, y + 3, x + cw - 3, y + 17], fill=rgb(REGION_COLORS[s["region"]]))
+        put(d, (x + 7, y + 10), s["kicker"], font(8, True), "#FFFFFF", anchor="lm")
+        badge(d, x + cw - 14, y + 10, s["n"], REGION_COLORS[s["region"]], r=6, fsize=8)
+        yy = y + 124
+        for ln in wrap(s["headline"], font(11, True, True), cw - 12, d)[:2]:
+            put(d, (x + 6, yy), ln, font(11, True, True), INK)
+            yy += 14
+        put(d, (x + 6, y + 153), s["source"], font(7), MUTED)
+        chip(d, x + cw - 70, y + 147, s["status"], fill="#E9E2D2", fsize=7)
 
     map_panel(d, (12, 720, 392, 960))
     list_panel(d, (400, 720, W - 12, 960))

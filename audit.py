@@ -66,13 +66,13 @@ def main():
 
     # five coordinates checked by hand against the projection:
     # (story number, expected continent box in projected pixels)
-    mx0, my0, mx1, my1 = 18, 744, 386, 898
+    mx0, my0, mx1, my1 = 16, 738, 388, 914
     def proj(lon, lat):
         return (mx0 + (lon + 180) / 360 * (mx1 - mx0),
                 my0 + (83 - lat) / 141 * (my1 - my0))
-    spots = [(1, (210, 255, 750, 805), "Antalya"), (2, (230, 270, 765, 818), "Riyadh"),
-             (3, (105, 145, 815, 857), "Junin"), (10, (365, 390, 860, 890), "Wellington"),
-             (17, (210, 250, 845, 873), "Pretoria")]
+    spots = [(1, (210, 255, 755, 805), "Antalya"), (2, (230, 270, 770, 820), "Riyadh"),
+             (3, (100, 145, 815, 865), "Junin"), (10, (365, 395, 388, 903), "Wellington"),
+             (17, (210, 250, 845, 883), "Pretoria")]
     for n, (bx0, by0, bx1, by1), label in spots:
         s = next(x for x in STORIES if x["n"] == n)
         px, py = proj(s["lon"], s["lat"])
