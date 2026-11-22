@@ -250,8 +250,8 @@ def s_quake(d, w, h):
     d.ellipse((ex - 3, ey - 3, ex + 3, ey + 3), fill=RED)
     for r in (10, 20, 32):
         d.arc((ex - r, ey - r, ex + r, ey + r), 210, 330, fill=RED, width=2)
-    d.line((ex, ey, ex, h * .44), fill=RED)
-    txt(d, (ex + 4, h * .45), "108 KM", F["art_s"], RED)
+    d.line((ex, ey, ex, h * .38), fill=RED)
+    pill(d, ex + 16, h * .30, "108 KM", F["art_s"], "#FFFFFF", RED)
     pill(d, 4, 3, "00:09 UTC · LIMA, PERU", F["art_l"])
     tag(d, w - 88, h - 16, "USGS M6.7")
     txt(d, (4, h - 12), "NO TSUNAMI", F["art_s"], INK)
@@ -320,9 +320,10 @@ def s_space(d, w, h):
         d.ellipse((x, y, x + 1, y + 1), fill="#FFFFFF")
     cx, cy, r = w * .74, h * .50, h * .30
     d.ellipse((cx - r, cy - r, cx + r, cy + r), fill="#8C877E", outline="#CFCBC0")
-    for i in range(5):
-        d.ellipse((cx - r * .7 + i * 8, cy - r * .5, cx - r * .5 + i * 8, cy - r * .2), fill="#6E6A63")
-    d.arc((cx - r * .6, cy - r * .6, cx + r * .6, cy + r * .6), 20, 160, fill="#5E5A55")
+    for dx, dy, rr in ((-.35, -.30, 2.5), (.05, -.40, 2), (.40, -.10, 3),
+                       (-.20, .25, 2.5), (.28, .32, 2)):
+        d.ellipse((cx + dx * r - rr, cy + dy * r - rr,
+                   cx + dx * r + rr, cy + dy * r + rr), fill="#6E6A63")
     d.arc((w * .06, h * .06, w * .94, h * .96), 195, 345, fill="#E8B23A", width=2)
     sx, sy = w * .30, h * .34
     d.rectangle((sx - 10, sy - 3, sx + 10, sy + 3), fill="#E8B23A")
@@ -343,7 +344,7 @@ def s_jets(d, w, h):
     d.line((w * .50, 0, w * .50, h), fill=RED, width=1)
     for i in range(21):
         x = w * .30 + (i % 7) * w * .055
-        y = h * .18 + (i // 7) * h * .22
+        y = h * .26 + (i // 7) * h * .20
         d.polygon([(x - 4, y), (x + 5, y), (x, y + 3)], fill=INK)
         d.line((x, y + 1, x - 3, y + 6), fill=INK, width=1)
     for x in (w * .66, w * .72):
@@ -355,12 +356,11 @@ def s_jets(d, w, h):
 def s_trade(d, w, h):
     """Brussels 09:42 UTC — EU and Indonesia sign; tariffs fall 98.5%."""
     d.rectangle((0, 0, w, h), fill="#EEF0E8")
-    _flag(d, 10, 10, 32, 20, ["#2E5B9A"] + ["#F2C14E"] * 12)
+    d.rectangle((10, 10, 42, 30), fill="#2E5B9A")
     for i in range(12):
         a = 2 * math.pi * i / 12
-        cx, cy = 26, 20
-        d.ellipse((cx + 7 * math.cos(a) - 1, cy + 6 * math.sin(a) - 1,
-                   cx + 7 * math.cos(a) + 1, cy + 6 * math.sin(a) + 1), fill="#F2C14E")
+        sx, sy = 26 + 8 * math.cos(a), 20 + 6 * math.sin(a)
+        d.ellipse((sx - 1.5, sy - 1.5, sx + 1.5, sy + 1.5), fill="#F2C14E")
     _flag(d, w - 42, 10, 32, 20, ["#CE1126", "#FFFFFF"])
     d.rectangle((w * .40, h * .28, w * .64, h * .86), fill="#FFFFFF", outline=MUTED)
     for j in range(3):
@@ -380,7 +380,7 @@ def s_rugby(d, w, h):
     d.line((w * .72, h * .28, w * .88, h * .28), fill="#FFFFFF", width=2)
     d.ellipse((w * .38, h * .42, w * .50, h * .62), fill="#8A5A2B", outline="#FFFFFF")
     for x, c in ((w * .16, "#FFFFFF"), (w * .28, "#1B1B1B"), (w * .60, "#FFFFFF")):
-        _person(d, x, h * .72, 1.5, c)
+        _person(d, x, h * .55, 1.5, c)
     d.rectangle((w * .06, h * .04, w * .58, h * .22), fill=INK)
     txt(d, (w * .32, h * .13), "ENG 37 – 12 NZL", F["art_s"], "#FFFFFF", "mm")
     pill(d, 3, h - 15, "TWICKENHAM · RECORD MARGIN", F["art_s"])
