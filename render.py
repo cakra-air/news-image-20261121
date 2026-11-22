@@ -396,16 +396,16 @@ def build(out="entry.png"):
 
     # DATE CHECK between two rules; SOURCE sticks right under the lower rule,
     # both pushed down to the bottom edge of the image.
-    d.line([12, 956, W - 12, 956], fill=rgb(RED), width=1)
+    d.line([12, 952, W - 12, 952], fill=rgb(RED), width=1)
     label = "DATE CHECK: "
     fl, fb = font(9, True), font(8)
-    put(d, (20, 964), label, fl, rgb(RED))
+    put(d, (20, 960), label, fl, rgb(RED))
     indent = 20 + d.textlength(label, font=fl)
     lines = wrap(DATE_CHECK, fb, 700, d)
-    for i, ln in enumerate(lines[:2]):
-        put(d, (20 if i else indent, 964 + i * 12), ln, fb, INK)
-    d.line([12, 992, W - 12, 992], fill=rgb(RED), width=1)
-    put(d, (20, 999), "SOURCE: " + SOURCES_LINE, font(7), MUTED)
+    for i, ln in enumerate(lines[:3]):
+        put(d, (20 if i else indent, 960 + i * 12), ln, fb, INK)
+    d.line([12, 996, W - 12, 996], fill=rgb(RED), width=1)
+    put(d, (20, 1003), "SOURCE: " + SOURCES_LINE, font(7), MUTED)
 
     im.save(out, "PNG", optimize=True)
     return out
