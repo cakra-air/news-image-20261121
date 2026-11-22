@@ -68,7 +68,8 @@ def pass_300px():
         "masthead": 66, "masthead label": 9, "deck": 15,
         "stat number": 30, "region label": 9,
         "main headline": 18, "main body": 10, "small headline": 11,
-        "small body": 9, "list headline": 8, "list source": 6,
+        "small body": 9, "illustration badge": 9,
+        "list headline": 8, "list source": 6,
         "date check": 7, "source line": 8,
     }
     return [(k, f"{v} px", f"{v * SCALE:.2f} px @300") for k, v in fonts.items()]

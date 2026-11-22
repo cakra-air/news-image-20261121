@@ -71,8 +71,8 @@ F = {
     "lab": face("arialbd.ttf", 9),
     "date": face("arial.ttf", 7),
     "src": face("arial.ttf", 8),
-    "art_l": face("arialbd.ttf", 8),
-    "art_s": face("arialbd.ttf", 7),
+    "art_l": face("arialbd.ttf", 9),
+    "art_s": face("arialbd.ttf", 9),
 }
 
 
@@ -211,7 +211,7 @@ def s_gulf(d, w, h):
         d.ellipse((cx - 9, cy - 7, cx + 9, cy + 7), outline=RED, width=2)
     txt(d, (w * .04, h * .16 + 4), "SAUDI ARABIA", F["art_s"], MUTED)
     pill(d, 4, 3, "05:00 UTC · STRAIT OF HORMUZ", F["art_l"])
-    tag(d, w * .66, 5, "IRAN FIRES ←")
+    tag(d, w * .66, 5, "IRAN FIRES")
     tag(d, 4, h - 16, "BAHRAIN + 2 TANKERS HIT")
     tag(d, w * .86, h - 16, "IRAN")
 
@@ -296,7 +296,7 @@ def s_robot(d, w, h):
     """Geneva, 128 states — treaty text and a robot under a red ban sign."""
     d.rectangle((0, 0, w, h), fill="#E9EEF4")
     for i in range(6):
-        _flag(d, 8 + i * 15, 5, 12, 8, ["#2E5B9A"])
+        _flag(d, 8 + i * 15, 18, 12, 8, ["#2E5B9A"])
     d.rectangle((w * .12, h * .34, w * .50, h * .88), fill="#FFFFFF", outline=MUTED)
     for j in range(4):
         d.line((w * .15, h * .44 + j * 8, w * .47, h * .44 + j * 8), fill=MUTED)
@@ -357,10 +357,10 @@ def s_jets(d, w, h):
 def s_trade(d, w, h):
     """Brussels 09:42 UTC — EU and Indonesia sign; tariffs fall 98.5%."""
     d.rectangle((0, 0, w, h), fill="#EEF0E8")
-    d.rectangle((10, 10, 42, 30), fill="#2E5B9A")
+    d.rectangle((10, 18, 42, 38), fill="#2E5B9A")
     for i in range(12):
         a = 2 * math.pi * i / 12
-        sx, sy = 26 + 8 * math.cos(a), 20 + 6 * math.sin(a)
+        sx, sy = 26 + 8 * math.cos(a), 28 + 6 * math.sin(a)
         d.ellipse((sx - 1.5, sy - 1.5, sx + 1.5, sy + 1.5), fill="#F2C14E")
     _flag(d, w - 42, 10, 32, 20, ["#CE1126", "#FFFFFF"])
     d.rectangle((w * .40, h * .28, w * .64, h * .86), fill="#FFFFFF", outline=MUTED)
@@ -370,7 +370,7 @@ def s_trade(d, w, h):
     for i, hg in enumerate((18, 12, 7)):
         d.rectangle((w * .70 + i * 12, h * .80 - hg, w * .70 + i * 12 + 8, h * .80), fill="#7D8C6A")
     pill(d, 3, 3, "09:42 UTC · BRUSSELS", F["art_s"])
-    tag(d, 3, h - 15, "EU–INDONESIA FTA · −98.5%")
+    tag(d, 3, h - 15, "EU-INDONESIA FTA · -98.5%")
 
 
 def s_rugby(d, w, h):
@@ -383,7 +383,7 @@ def s_rugby(d, w, h):
     for x, c in ((w * .16, "#FFFFFF"), (w * .28, "#1B1B1B"), (w * .60, "#FFFFFF")):
         _person(d, x, h * .55, 1.5, c)
     d.rectangle((w * .06, h * .04, w * .58, h * .22), fill=INK)
-    txt(d, (w * .32, h * .13), "ENG 37 – 12 NZL", F["art_s"], "#FFFFFF", "mm")
+    txt(d, (w * .32, h * .13), "ENG 37-12 NZL", F["art_s"], "#FFFFFF", "mm")
     pill(d, 3, h - 15, "TWICKENHAM · RECORD MARGIN", F["art_s"])
 
 
