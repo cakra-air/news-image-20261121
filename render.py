@@ -279,13 +279,13 @@ def map_panel(d, box):
         MAP_PLACEMENTS.append((s["n"], dx, dy, bx, by))
         badge(d, bx, by, s["n"], col, r=6, fsize=8)
 
-    # legend, two rows so every region fits the wider map panel
-    for i, reg in enumerate(REGIONS):
-        row, col = divmod(i, 4)
-        lx, ly = x0 + 7 + col * 96, y1 - 52 + row * 16
+    # legend, one tight row like the house front page
+    lx, ly = x0 + 7, y1 - 52
+    for reg in REGIONS:
         cnt = sum(1 for s in STORIES if s["region"] == reg)
-        d.ellipse([lx, ly + 2, lx + 8, ly + 10], fill=rgb(REGION_COLORS[reg]))
-        put(d, (lx + 12, ly + 6), f"{reg} {cnt}", font(8, True), INK, anchor="lm")
+        d.ellipse([lx, ly + 2, lx + 7, ly + 7], fill=rgb(REGION_COLORS[reg]))
+        put(d, (lx + 10, ly + 4.5), f"{reg} {cnt}", font(6.5), INK, anchor="lm")
+        lx += d.textlength(f"{reg} {cnt}", font=font(6.5)) + 20
     put(d, (x0 + 8, y1 - 14),
         "Each number is the story with that number on this page. Dots mark the place; lines join dot to number.",
         font(7), MUTED)
@@ -294,7 +294,8 @@ def map_panel(d, box):
 def list_panel(d, box):
     x0, y0, x1, y1 = box
     d.rounded_rectangle(box, radius=4, fill="#FFFDF7", outline=rgb(LINE), width=1)
-    put(d, (x0 + 8, y0 + 5), f"ALSO ON SATURDAY 21 NOVEMBER — {len(STORIES) - 11} MORE STORIES",
+    put(d, (x0 + 8, y0 + 5),
+        f"ALSO ON SATURDAY 21 NOVEMBER 2026 — {len(STORIES) - 11} MORE STORIES",
         font(10, True), INK)
     briefs = [s for s in STORIES if s["size"] == "brief"]
     colw = (x1 - x0 - 16) // 2
@@ -327,6 +328,7 @@ def build(out="entry.png"):
     put(d, (W // 2, 113),
         "COP31 runs past its deadline · Missiles over Riyadh · A deep quake shakes Peru",
         font(15, False, True), MUTED, anchor="mm")
+    d.line([12, 126, W - 12, 126], fill=rgb(LINE), width=1)
 
     stats = [("DAY 13", "of COP31, still no deal"), ("3", "missiles downed over Riyadh"),
              ("6.7", "magnitude, Peru quake"), ("15", "hurt in Junín"),
@@ -335,8 +337,8 @@ def build(out="entry.png"):
     sw = (W - 24) // 7
     for i, (big, small) in enumerate(stats):
         sx = 12 + i * sw
-        put(d, (sx + sw // 2, 141), big, font(24, True, True), rgb(RED), anchor="mm")
-        put(d, (sx + sw // 2, 162), small, font(7), INK, anchor="mm")
+        put(d, (sx + sw // 2, 143), big, font(30, True, True), rgb(RED), anchor="mm")
+        put(d, (sx + sw // 2, 164), small, font(7.5), INK, anchor="mm")
         if i:
             d.line([sx, 130, sx, 170], fill=rgb(LINE))
 
@@ -357,11 +359,11 @@ def build(out="entry.png"):
         d.rectangle([x + 3, y + 95, x + mw - 3, y + 109], fill=rgb(REGION_COLORS[s["region"]]))
         put(d, (x + 8, y + 102), s["kicker"], font(9, True), "#FFFFFF", anchor="lm")
         badge(d, x + mw - 16, y + 102, s["n"], REGION_COLORS[s["region"]], r=7, fsize=10)
-        yy = y + 113
-        for ln in wrap(s["headline"], font(16, True, True), mw - 14, d)[:2]:
-            put(d, (x + 7, yy), ln, font(16, True, True), INK)
-            yy += 19
-        yy = max(yy + 4, y + 150)
+        yy = y + 112
+        for ln in wrap(s["headline"], font(18, True, True), mw - 14, d)[:2]:
+            put(d, (x + 7, yy), ln, font(18, True, True), INK)
+            yy += 21
+        yy = max(yy + 3, y + 148)
         for ln in wrap(s["body"], font(10), mw - 16, d)[:2]:
             put(d, (x + 7, yy), ln, font(10), INK)
             yy += 13
@@ -379,14 +381,15 @@ def build(out="entry.png"):
         put(d, (x + 103, y + 11), s["kicker"], font(8, True), "#FFFFFF", anchor="lm")
         badge(d, x + cw - 13, y + 11, s["n"], REGION_COLORS[s["region"]], r=6, fsize=8)
         yy = y + 24
-        for ln in wrap(s["headline"], font(13, True), cw - 108, d)[:3]:
-            put(d, (x + 100, yy), ln, font(13, True), INK)
+        for ln in wrap(s["headline"], font(13, True, True), cw - 108, d)[:3]:
+            put(d, (x + 100, yy), ln, font(13, True, True), INK)
             yy += 16
         yy = max(yy + 3, y + 76)
         for ln in wrap(s["body"], font(10), cw - 108, d)[:3]:
             put(d, (x + 100, yy), ln, font(10), MUTED)
             yy += 12
-        put(d, (x + 100, y + 131), s["source"], font(8, True), rgb(REGION_COLORS[s["region"]]))
+        put(d, (x + 100, y + 131), s["source"], font(7.5), MUTED)
+        chip(d, x + cw - 74, y + 125, s["status"], fill="#E9E2D2", fsize=7)
 
     map_panel(d, (12, 680, 392, 930))
     list_panel(d, (400, 680, W - 12, 930))

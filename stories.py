@@ -28,13 +28,13 @@ STORIES = [
     dict(n=2, region="Middle East", place="RIYADH, SAUDI ARABIA", lat=24.71, lon=46.68,
          kicker="WAR · 03:00 LOCAL", headline="Three missiles downed over Riyadh",
          body="Coalition says it destroyed three Houthi ballistic missiles after alerts.",
-         source="Arab News / AFP", status="OFFICIAL", size="main", scene="missiles",
+         source="AFP", status="OFFICIAL", size="main", scene="missiles",
          brief="Riyadh: three Houthi missiles intercepted before dawn"),
 
     dict(n=3, region="Americas", place="JUNÍN, PERU", lat=-10.97, lon=-76.19,
          kicker="QUAKE · 00:09 UTC", headline="Magnitude 6.7 quake shakes Peru",
          body="Deep tremor felt in Lima; officials count 15 hurt and 127 homes damaged.",
-         source="USGS / AP / INDECI", status="OFFICIAL", size="main", scene="quake",
+         source="USGS / AP", status="OFFICIAL", size="main", scene="quake",
          brief="Junín: M6.7 at 108 km depth, 15 injured, 127 homes hit"),
 
     dict(n=4, region="Europe", place="KRYVYI RIH, UKRAINE", lat=47.90, lon=33.39,
@@ -46,19 +46,19 @@ STORIES = [
     dict(n=5, region="Middle East", place="TEHRAN, IRAN", lat=35.69, lon=51.39,
          kicker="DIPLOMACY · STATEMENT", headline="Iran: enriched uranium stays home",
          body="Araghchi says the stock will serve national needs; US gap remains wide.",
-         source="Tehran Times / Times of Israel", status="OFFICIAL", size="small", scene="uranium",
+         source="TOI / TT", status="OFFICIAL", size="small", scene="uranium",
          brief="Tehran: uranium will not be sent abroad, minister says"),
 
     dict(n=6, region="Americas", place="WASHINGTON, USA", lat=38.90, lon=-77.04,
          kicker="TECH · TAX THREAT", headline="Trump vows tax on data centres abroad",
          body="US firms building AI capacity overseas face a 'tremendous' penalty.",
-         source="NYT / Seeking Alpha", status="REPORTED", size="small", scene="tax",
+         source="NYT", status="REPORTED", size="small", scene="tax",
          brief="Washington: threatens 'tremendous tax' on overseas AI data centres"),
 
     dict(n=7, region="Asia", place="BEIJING, CHINA", lat=39.90, lon=116.41,
          kicker="DIPLOMACY · PRESSURE", headline="China urges Japan to retract remarks",
          body="Military media renew the call over Takaichi's Taiwan comments.",
-         source="AFP / Zaobao", status="OFFICIAL", size="small", scene="flags",
+         source="AFP", status="OFFICIAL", size="small", scene="flags",
          brief="Beijing: military press urges Tokyo to retract Taiwan remarks"),
 
     dict(n=8, region="World", place="GLOBAL MARKETS", lat=40.71, lon=-74.01,
@@ -70,25 +70,25 @@ STORIES = [
     dict(n=9, region="World", place="GENEVA, SWITZERLAND", lat=46.20, lon=6.14,
          kicker="UN · DEADLINE", headline="Killer-robot rules pushed to 2028",
          body="128 states extend talks but agree no binding ban yet.",
-         source="Reuters / NYT", status="CONFIRMED", size="small", scene="robot",
+         source="Reuters", status="CONFIRMED", size="small", scene="robot",
          brief="Geneva: 128 states extend autonomous-weapons talks to 2028"),
 
     dict(n=10, region="Oceania", place="WELLINGTON, NZ", lat=-41.29, lon=174.78,
          kicker="CRICKET · DAY 3", headline="Rahul 136 puts India in charge",
          body="Gill misses a ton by two; India lead the first Test.",
-         source="ANI / Yahoo", status="CONFIRMED", size="small", scene="cricket",
+         source="ANI", status="CONFIRMED", size="small", scene="cricket",
          brief="Wellington: Rahul 136, Gill 98, India control first Test"),
 
     dict(n=11, region="Americas", place="LAS VEGAS, USA", lat=36.17, lon=-115.14,
          kicker="F1 · QUALIFYING", headline="Verstappen inherits Vegas pole",
          body="Antonelli is fastest but drops to sixth after a penalty.",
-         source="Formula 1 / ESPN", status="OFFICIAL", size="small", scene="f1",
+         source="Formula 1", status="OFFICIAL", size="small", scene="f1",
          brief="Las Vegas: Antonelli quickest, Verstappen starts on pole"),
 
     dict(n=12, region="Europe", place="WARSAW, POLAND", lat=52.23, lon=21.01,
          kicker="NATO · MISSILE", headline="Missile crashes in Poland; Tusk objects",
          body="Trump calls it a 'mistake'; the Polish PM disputes that account.",
-         source="BBC / UPI", status="REPORTED", size="brief", scene="pin", brief=""),
+         source="BBC", status="REPORTED", size="brief", scene="pin", brief=""),
 
     dict(n=13, region="Middle East", place="JAZAN, SAUDI ARABIA", lat=16.88, lon=42.56,
          kicker="WAR · INTERCEPT", headline="Two missiles downed over Jazan",
@@ -103,7 +103,7 @@ STORIES = [
     dict(n=15, region="Middle East", place="STRAIT OF HORMUZ", lat=26.57, lon=56.25,
          kicker="SHIPPING · ALERT", headline="Two tankers attacked near Hormuz",
          body="Iran displays a launcher as alerts go out to shipping.",
-         source="Al Jazeera / DNE", status="REPORTED", size="brief", scene="pin", brief=""),
+         source="AFP", status="REPORTED", size="brief", scene="pin", brief=""),
 
     dict(n=16, region="Middle East", place="MANAMA, BAHRAIN", lat=26.23, lon=50.58,
          kicker="INCIDENT · FIRE", headline="Industrial site fire reported",
@@ -133,12 +133,12 @@ STORIES = [
     dict(n=21, region="Asia", place="TAIPEI, TAIWAN", lat=25.03, lon=121.57,
          kicker="INCIDENT", headline="Train blast injures 25",
          body="Police rule out terrorism after the carriage explosion.",
-         source="CNA / Yeni Safak", status="REPORTED", size="brief", scene="pin", brief=""),
+         source="CNA", status="REPORTED", size="brief", scene="pin", brief=""),
 
     dict(n=22, region="Asia", place="CHANDEL, INDIA", lat=24.30, lon=94.00,
          kicker="PUBLIC HEALTH", headline="Illicit alcohol kills 15",
          body="Another 180 hospitalised in Manipur after drinking it.",
-         source="AsiaNews / CNA", status="REPORTED", size="brief", scene="pin", brief=""),
+         source="CNA", status="REPORTED", size="brief", scene="pin", brief=""),
 
     dict(n=23, region="Asia", place="ISLAMABAD, PAKISTAN", lat=33.68, lon=73.05,
          kicker="WEATHER", headline="Monsoon rains kill dozens",
@@ -168,17 +168,17 @@ STORIES = [
     dict(n=28, region="Oceania", place="SYDNEY, AUSTRALIA", lat=-33.87, lon=151.21,
          kicker="CRICKET", headline="Cummins keeps the captaincy",
          body="Cricket Australia gives its skipper unanimous support.",
-         source="AP / Al Jazeera", status="OFFICIAL", size="brief", scene="pin", brief=""),
+         source="AP", status="OFFICIAL", size="brief", scene="pin", brief=""),
 
     dict(n=29, region="Oceania", place="AUCKLAND, NZ", lat=-36.85, lon=174.76,
          kicker="SAFETY", headline="Coloured-sand recall raises alarm",
          body="Regulator warns the imported batches may be unsafe.",
-         source="ABC Australia", status="REPORTED", size="brief", scene="pin", brief=""),
+         source="ABC", status="REPORTED", size="brief", scene="pin", brief=""),
 
     dict(n=30, region="Europe", place="DUBLIN, IRELAND", lat=53.35, lon=-6.26,
          kicker="RUGBY", headline="Ireland edge South Africa 20-17",
          body="The Springboks still reach the inaugural final.",
-         source="Reuters / BBC", status="CONFIRMED", size="brief", scene="pin", brief=""),
+         source="Reuters", status="CONFIRMED", size="brief", scene="pin", brief=""),
 ]
 
 DATE_CHECK = (

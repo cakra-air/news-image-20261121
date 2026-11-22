@@ -32,7 +32,7 @@ def main():
         if s["size"] == "main":
             avail, fnt = 326 - 14, font(16, True, True)
         elif s["size"] == "small":
-            avail, fnt = 244 - 108, font(13, True)
+            avail, fnt = 244 - 108, font(13, True, True)
         else:
             avail, fnt = 310 - 24, font(8)
         for ln in wrap(s["headline"], fnt, avail, d):
