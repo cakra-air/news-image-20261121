@@ -57,9 +57,12 @@ def main():
     pts = [(x, y) for _, _, _, x, y in render.MAP_PLACEMENTS]
     mind = min(math.hypot(a[0] - b[0], a[1] - b[1])
                for i, a in enumerate(pts) for b in pts[i + 1:])
-    row("min badge distance >= 2r (12px)", mind >= 12, f"min={mind:.1f}px")
+    row("min badge distance >= 2r (10px)", mind >= 10, f"min={mind:.1f}px")
     offs = [math.hypot(bx - dx, by - dy) for _, dx, dy, bx, by in render.MAP_PLACEMENTS]
     row("max badge offset <= 42px", max(offs) <= 42, f"max={max(offs):.1f}px")
+    row("garis penghubung (offset > 10px)",
+        sum(1 for o in offs if o > 10) <= 8,
+        f"{sum(1 for o in offs if o > 10)} dari {len(offs)} badge")
     row("every story carries a source", all(s["source"] for s in STORIES), "30 sources")
     row("every story carries a place + time on its card",
         all(s["place"] and (s["kicker"] or s["scene"]) for s in STORIES), "30 datelines")

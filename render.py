@@ -254,13 +254,13 @@ def map_panel(d, box):
         col = REGION_COLORS[s["region"]]
         d.ellipse([dx - 3, dy - 3, dx + 3, dy + 3], fill=rgb(col), outline=(255, 255, 255), width=1)
         got = None
-        for r in (0, 8, 15, 23, 32, 42):
+        for r in (0, 6, 12, 18, 24, 30):
             for k in range(16):
                 ang = 2 * math.pi * k / 16
                 bx, by = dx + r * math.cos(ang), dy + r * math.sin(ang)
-                if not (mx0 + 8 < bx < mx1 - 8 and my0 + 8 < by < my1 - 8):
+                if not (mx0 + 7 < bx < mx1 - 7 and my0 + 7 < by < my1 - 7):
                     continue
-                if all(math.hypot(bx - qx, by - qy) >= 2 * 6 + 3 for qx, qy, _ in placed):
+                if all(math.hypot(bx - qx, by - qy) >= 2 * 5 + 3 for qx, qy, _ in placed):
                     got = (bx, by)
                     break
             if got:
@@ -268,7 +268,7 @@ def map_panel(d, box):
         if got is None:
             got = (dx, dy)
         bx, by = got
-        if math.hypot(bx - dx, by - dy) > 4:
+        if math.hypot(bx - dx, by - dy) > 10:
             d.line([dx, dy, bx, by], fill=rgb(col), width=1)
             ang = math.atan2(by - dy, bx - dx)
             hx, hy = bx - 7 * math.cos(ang), by - 7 * math.sin(ang)
@@ -277,7 +277,7 @@ def map_panel(d, box):
                        (hx - 3 * math.sin(ang), hy + 3 * math.cos(ang))], fill=rgb(col))
         placed.append((bx, by, s["n"]))
         MAP_PLACEMENTS.append((s["n"], dx, dy, bx, by))
-        badge(d, bx, by, s["n"], col, r=6, fsize=8)
+        badge(d, bx, by, s["n"], col, r=5, fsize=7)
 
     # legend, one tight row like the house front page
     lx, ly = x0 + 7, y1 - 40
@@ -403,7 +403,7 @@ def build(out="entry.png"):
         font(7.5), INK)
     put(d, (tx, 990),
         wrap(DATE_CHECK, font(7.5), W - tx - 20, d)[0], font(7.5), INK)
-    put(d, (W - 12, 1010), SOURCES_LINE, font(6), MUTED, anchor="rm")
+    put(d, (W - 12, 1011), SOURCES_LINE, font(8), INK, anchor="rm")
 
     im.save(out, "PNG", optimize=True)
     return out
