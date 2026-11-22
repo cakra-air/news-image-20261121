@@ -394,21 +394,18 @@ def build(out="entry.png"):
     map_panel(d, (12, 680, 392, 930))
     list_panel(d, (400, 680, W - 12, 930))
 
-    # Top-1 style: a slim red rule around one flowing DATE CHECK paragraph,
-    # the label sitting inline in red, then two quiet lines underneath.
-    d.rectangle([12, 934, W - 12, 974], fill="#FBF6EE", outline=rgb(RED), width=1)
-    label = "DATE CHECK  "
+    # DATE CHECK sits between two rules; the source line follows below,
+    # indented and close to the bottom edge of the image.
+    d.line([12, 942, W - 12, 942], fill=rgb(RED), width=1)
+    label = "DATE CHECK: "
     fl, fb = font(9, True), font(8)
-    put(d, (20, 942), label, fl, rgb(RED))
+    put(d, (20, 950), label, fl, rgb(RED))
     indent = 20 + d.textlength(label, font=fl)
     lines = wrap(DATE_CHECK, fb, 700, d)
-    for i, ln in enumerate(lines[:3]):
-        put(d, (20 if i else indent, 942 + i * 11), ln, fb, INK)
-    put(d, (12, 987),
-        "Every story happened, or was first reported, on Saturday 21 November 2026. "
-        "Official counts and claims are attributed.",
-        font(7), MUTED)
-    put(d, (12, 1006), SOURCES_LINE, font(6.5), MUTED)
+    for i, ln in enumerate(lines[:2]):
+        put(d, (20 if i else indent, 950 + i * 12), ln, fb, INK)
+    d.line([12, 980, W - 12, 980], fill=rgb(RED), width=1)
+    put(d, (20, 1000), "SOURCE: " + SOURCES_LINE, font(7), MUTED)
 
     im.save(out, "PNG", optimize=True)
     return out
