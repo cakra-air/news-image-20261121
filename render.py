@@ -293,7 +293,7 @@ def s_capture(d, w, h):
 
 
 def s_robot(d, w, h):
-    """Geneva, 128 states — treaty text and a robot under a red ban sign."""
+    """Geneva, 128 states — a humanoid killer robot under a red ban sign."""
     d.rectangle((0, 0, w, h), fill="#E9EEF4")
     for i in range(6):
         _flag(d, 8 + i * 15, 18, 12, 8, ["#2E5B9A"])
@@ -302,13 +302,33 @@ def s_robot(d, w, h):
         d.line((w * .15, h * .44 + j * 8, w * .47, h * .44 + j * 8), fill=MUTED)
     d.ellipse((w * .16, h * .60, w * .30, h * .80), outline=RED, width=2)
     txt(d, (w * .23, h * .70), "128", F["art_s"], RED, "mm")
-    d.rectangle((w * .58, h * .34, w * .78, h * .78), fill="#6C8EBF", outline=INK)
-    d.ellipse((w * .62, h * .40, w * .74, h * .54), fill="#DDE7F2")
-    d.ellipse((w * .655, h * .45, w * .67, h * .465), fill=INK)
-    d.ellipse((w * .705, h * .45, w * .72, h * .465), fill=INK)
-    d.line((w * .64, h * .66, w * .72, h * .66), fill=INK)
-    d.ellipse((w * .80, h * .20, w * .98, h * .56), outline=RED, width=3)
-    d.line((w * .82, h * .22, w * .96, h * .54), fill=RED, width=3)
+    # Unmistakably a robot: antenna, head with two eyes, neck, chest panel,
+    # jointed arms and jointed legs with feet.
+    cx, cy, s = w * .74, h * .59, .85
+    d.line((cx, cy - 22 * s, cx, cy - 32 * s), fill=INK, width=2)
+    d.ellipse((cx - 2 * s, cy - 36 * s, cx + 2 * s, cy - 32 * s), fill=RED)
+    d.rounded_rectangle((cx - 11 * s, cy - 22 * s, cx + 11 * s, cy - 6 * s),
+                        radius=3, fill="#6C8EBF", outline=INK)
+    for ex in (cx - 5 * s, cx + 5 * s):
+        d.ellipse((ex - 3 * s, cy - 17 * s, ex + 3 * s, cy - 11 * s), fill="#DDE7F2")
+        d.ellipse((ex - 1.5 * s, cy - 15.5 * s, ex + 1.5 * s, cy - 12.5 * s), fill=INK)
+    d.line((cx - 5 * s, cy - 9 * s, cx + 5 * s, cy - 9 * s), fill=INK)
+    d.rectangle((cx - 2 * s, cy - 6 * s, cx + 2 * s, cy - 2 * s), fill=INK)
+    d.rounded_rectangle((cx - 12 * s, cy - 2 * s, cx + 12 * s, cy + 16 * s),
+                        radius=3, fill="#8FA9C9", outline=INK)
+    d.rectangle((cx - 6 * s, cy + 3 * s, cx + 6 * s, cy + 10 * s), fill="#DDE7F2", outline=INK)
+    d.ellipse((cx - 1.5 * s, cy + 5 * s, cx + 1.5 * s, cy + 8 * s), fill=RED)
+    for side in (-1, 1):
+        d.line((cx + side * 12 * s, cy + 2 * s, cx + side * 18 * s, cy + 10 * s), fill=INK, width=3)
+        d.line((cx + side * 18 * s, cy + 10 * s, cx + side * 15 * s, cy + 18 * s), fill=INK, width=3)
+        d.ellipse((cx + side * 18 * s - 2 * s, cy + 8 * s,
+                   cx + side * 18 * s + 2 * s, cy + 12 * s), fill="#6C8EBF")
+        d.line((cx + side * 5 * s, cy + 16 * s, cx + side * 7 * s, cy + 25 * s), fill=INK, width=3)
+        d.line((cx + side * 7 * s, cy + 25 * s, cx + side * 9 * s, cy + 29 * s), fill=INK, width=3)
+        d.ellipse((cx + side * 9 * s - 4 * s, cy + 28 * s,
+                   cx + side * 9 * s + 3 * s, cy + 31 * s), fill="#6C8EBF")
+    d.ellipse((cx - 28, cy - 28, cx + 28, cy + 28), outline=RED, width=3)
+    d.line((cx - 20, cy - 20, cx + 20, cy + 20), fill=RED, width=3)
     pill(d, 3, 3, "21 NOV · GENEVA · 128 STATES", F["art_s"])
     tag(d, 3, h - 15, "BAN AUTOWEAPONS TALKS")
 
