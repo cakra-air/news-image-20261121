@@ -400,14 +400,12 @@ def build(out="entry.png"):
     d.rectangle([18, 967, 68, 989], fill=rgb(RED), outline=rgb(RED), width=1)
     put(d, (43, 974), "DATE", font(7, True), "#FFFFFF", anchor="mm")
     put(d, (43, 984), "CHECK", font(7, True), "#FFFFFF", anchor="mm")
-    tx, ty = 76, 968
-    for ln in wrap(DATE_CHECK, font(7.5), W - tx - 20, d)[:2]:
-        put(d, (tx, ty), ln, font(7.5), INK)
-        ty += 11
-    put(d, (12, 1000),
-        "Every story happened, or was first reported, on Saturday 21 November 2026. "
-        "Official counts and claims are attributed.",
-        font(6.5), MUTED)
+    tx = 76
+    put(d, (tx, 968),
+        "Every story happened, or was first reported, on Saturday 21 November 2026.",
+        font(7.5), INK)
+    put(d, (tx, 980),
+        wrap(DATE_CHECK, font(7.5), W - tx - 20, d)[0], font(7.5), INK)
     put(d, (W - 12, 1015), SOURCES_LINE, font(6), MUTED, anchor="rm")
 
     im.save(out, "PNG", optimize=True)
