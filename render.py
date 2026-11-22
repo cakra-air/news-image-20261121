@@ -65,12 +65,12 @@ F = {
     "sb": face("arial.ttf", 9),
     "num": face("arialbd.ttf", 8),
     "lh": face("arial.ttf", 8),
-    "ls": face("arial.ttf", 7),
-    "leg": face("arial.ttf", 7),
+    "ls": face("arial.ttf", 6),
+    "leg": face("arial.ttf", 6),
     "idx": face("arialbd.ttf", 8),
     "lab": face("arialbd.ttf", 9),
-    "date": face("arial.ttf", 8),
-    "src": face("arial.ttf", 9),
+    "date": face("arial.ttf", 7),
+    "src": face("arial.ttf", 8),
     "art_l": face("arialbd.ttf", 9),
     "art_s": face("arialbd.ttf", 9),
 }
@@ -596,12 +596,12 @@ def draw_lists(d):
             rows[s["n"]] = ("L" if side == "L" else "R", cy + 7)
             rrect(d, (x0 + 6, cy - 3, x1 - 6, cy + step - 4), 3, fill=rgb(BUTTON), outline=rgb(LINE))
             bx = x0 + 20
-            rrect(d, (bx - 10, cy - 2, bx + 10, cy + 14), 3, fill=rgb(REGION_COLORS[s["region"] - 1]), outline="#FFFFFF")
-            txt(d, (bx, cy + 5), str(s["n"]), F["num"], "#FFFFFF", "mm")
+            rrect(d, (bx - 10, cy - 2, bx + 10, cy + 16), 3, fill=rgb(REGION_COLORS[s["region"] - 1]), outline="#FFFFFF")
+            txt(d, (bx, cy + 7), str(s["n"]), F["num"], "#FFFFFF", "mm")
             tx = x0 + 40
             hl = wrap(d, s["brief"], F["lh"], 174)[:2]
             for j, ln in enumerate(hl):
-                txt(d, (tx, cy + j * 8), fit(d, ln, F["lh"], 174), F["lh"], rgb(INK))
+                txt(d, (tx, cy + 1 + j * 9), fit(d, ln, F["lh"], 174), F["lh"], rgb(INK))
             txt(d, (x1 - 10, cy + 7), s["source"], F["ls"], rgb(MUTED), "rm")
     return rows
 
@@ -626,7 +626,7 @@ def build():
     rrect(d, (12, 722, 1012, 972), 4, fill=rgb(PANEL), outline=rgb(LINE), width=1)
     d.rectangle((20, 724, 94, 738), fill=rgb(RED))
     txt(d, (57, 731), "INDEX", F["idx"], "#FFFFFF", "mm")
-    txt(d, (102, 731), "ALSO ON SATURDAY 21 NOVEMBER — 24 MORE STORIES, RANKED BY CONSEQUENCE",
+    txt(d, (102, 731), "ALSO ON SATURDAY 21 NOVEMBER — 19 MORE STORIES, RANKED BY CONSEQUENCE",
         F["lab"], rgb(INK), "lm")
     d.line((12, 742, 1012, 742), fill=rgb(LINE))
     rrect(d, (316, 748, 708, 968), 6, outline=rgb(LINE), width=1)

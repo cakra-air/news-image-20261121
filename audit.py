@@ -35,12 +35,12 @@ def pass_geometry():
 def pass_semantics():
     rows = []
     nums = [s["n"] for s in STORIES]
-    rows.append(("Story count", str(len(nums)), "PASS" if len(nums) == 35 else "FAIL"))
+    rows.append(("Story count", str(len(nums)), "PASS" if len(nums) == 30 else "FAIL"))
     dup = [n for n, c in Counter(nums).items() if c != 1]
-    rows.append(("Numbers 1..35 once", str(dup or "unique"), "PASS" if not dup and sorted(nums) == list(range(1, 36)) else "FAIL"))
+    rows.append(("Numbers 1..30 once", str(dup or "unique"), "PASS" if not dup and sorted(nums) == list(range(1, 31)) else "FAIL"))
     sizes = Counter(s["size"] for s in STORIES)
     rows.append(("Size split", f"main {sizes['main']}, small {sizes['small']}, brief {sizes['brief']}",
-                 "PASS" if (sizes["main"], sizes["small"], sizes["brief"]) == (3, 8, 24) else "FAIL"))
+                 "PASS" if (sizes["main"], sizes["small"], sizes["brief"]) == (3, 8, 19) else "FAIL"))
     rows.append(("Map badges", str(sizes["main"] + sizes["small"]), "PASS"))
     rows.append(("Brief dots", str(sizes["brief"]), "PASS"))
     regs = set(s["region"] for s in STORIES)
@@ -50,7 +50,7 @@ def pass_semantics():
     rows.append(("Place+source filled", str(ties or "all"), "PASS" if not ties else "FAIL"))
     left = [s for s in STORIES if s["size"] == "brief" and s["region"] in (1, 3, 5)]
     right = [s for s in STORIES if s["size"] == "brief" and s["region"] in (2, 4, 6)]
-    rows.append(("List split", f"left {len(left)}, right {len(right)}", "PASS" if (len(left), len(right)) == (12, 12) else "FAIL"))
+    rows.append(("List split", f"left {len(left)}, right {len(right)}", "PASS" if (len(left), len(right)) == (8, 11) else "FAIL"))
     mapped = [s for s in STORIES if s["size"] in ("main", "small")]
     offs = []
     for s in mapped:
@@ -70,8 +70,8 @@ def pass_300px():
         "stat number": 30, "region label": 9,
         "main headline": 18, "main body": 10, "small headline": 11,
         "small body": 9, "illustration badge": 9,
-        "list headline": 8, "list source": 7,
-        "date check": 8, "source line": 9,
+        "list headline": 8, "list source": 6,
+        "date check": 7, "source line": 8,
     }
     return [(k, f"{v} px", f"{v * SCALE:.2f} px @300") for k, v in fonts.items()]
 

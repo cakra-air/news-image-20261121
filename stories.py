@@ -1,8 +1,8 @@
-"""35 dated stories for Saturday 21 November 2026.
+"""30 dated stories for Saturday 21 November 2026.
 
 Fields: n, region, lat, lon, place, kicker, headline, body, source, status, size, scene, brief
 region: 1=EUROPE 2=MIDDLE EAST 3=AFRICA 4=ASIA 5=AMERICAS 6=OCEANIA 7=GLOBAL
-size: main (3), small (8), brief (24) — 12 briefs on each side of the map.
+size: main (3), small (8), brief (19) — per frontpage news/frame.md table B.
 """
 
 STORIES = [
@@ -35,12 +35,7 @@ STORIES = [
     {'n': 27, 'region': 1, 'lat': 51.5, 'lon': -0.1, 'place': 'London', 'kicker': 'PREMIER LEAGUE · 16:30 UTC', 'headline': 'Leeds beat Chelsea 4–1 in London', 'body': 'Leeds scored four past Chelsea in a Premier League match in London, their best result of the season.', 'source': 'BBC / AFP', 'status': 'CONFIRMED', 'size': 'brief', 'scene': '', 'brief': 'Leeds beat Chelsea 4–1.'},
     {'n': 28, 'region': 5, 'lat': 30.3, 'lon': -81.7, 'place': 'Florida', 'kicker': 'US FLOODS · 12:00 UTC', 'headline': 'St Johns River tops its 1953 high mark', 'body': 'The St Johns River in Florida rose past its 1953 record after heavy rain, prompting flood warnings along its banks.', 'source': 'AP / NOAA', 'status': 'CONFIRMED', 'size': 'brief', 'scene': '', 'brief': 'St Johns River tops 1953 flood record.'},
     {'n': 29, 'region': 3, 'lat': 11.0, 'lon': 34.0, 'place': 'Blue Nile, Sudan', 'kicker': 'SUDAN · 09:00 UTC', 'headline': "Sudan's army says it has retaken ground", 'body': 'The Sudanese army said it had regained positions in Blue Nile state. The claim could not be independently verified.', 'source': 'ANADOLU / REUTERS', 'status': 'CLAIM', 'size': 'brief', 'scene': '', 'brief': 'Sudan army says it retakes Blue Nile ground.'},
-    {'n': 30, 'region': 2, 'lat': 27.0, 'lon': 55.5, 'place': 'Strait of Hormuz', 'kicker': 'IRAN · 21:00 UTC', 'headline': 'Iranian army says it downed five drones', 'body': "Iran's army said it shot down five drones over the Strait of Hormuz. No further details were given.", 'source': 'IRNA / REUTERS', 'status': 'CLAIM', 'size': 'brief', 'scene': '', 'brief': 'Iran says it downed 5 drones over Hormuz.'},
-    {'n': 31, 'region': 1, 'lat': 53.35, 'lon': -6.26, 'place': 'Dublin', 'kicker': 'IRELAND · RUGBY · 17:40 UTC', 'headline': 'Ireland beat South Africa 20–17', 'body': 'Ireland edged South Africa 20–17 in Dublin in a tight test match, their fourth win in a row.', 'source': 'RTE / AFP', 'status': 'CONFIRMED', 'size': 'brief', 'scene': '', 'brief': 'Ireland 20–17 South Africa.'},
-    {'n': 32, 'region': 1, 'lat': 45.07, 'lon': 7.69, 'place': 'Turin', 'kicker': 'TENNIS · ATP · 21:10 UTC', 'headline': 'Alcaraz beats Sinner in Turin', 'body': 'Carlos Alcaraz beat Jannik Sinner in the Turin final in straight sets to close out the season.', 'source': 'AFP', 'status': 'CONFIRMED', 'size': 'brief', 'scene': '', 'brief': 'Alcaraz beats Sinner in Turin.'},
-    {'n': 33, 'region': 3, 'lat': 4.9, 'lon': 6.4, 'place': 'Bayelsa, Nigeria', 'kicker': 'NIGERIA · 24 DEAD', 'headline': 'Funeral boat toll reaches 24', 'body': 'A boat carrying mourners capsized in Bayelsa. The death toll rose to 24 as rescue teams kept searching the river.', 'source': 'AFP / REUTERS', 'status': 'REPORTED', 'size': 'brief', 'scene': '', 'brief': 'Funeral boat capsizes in Nigeria; 24 dead.'},
-    {'n': 34, 'region': 1, 'lat': 52.2, 'lon': 21.0, 'place': 'Warsaw', 'kicker': 'NATO · 10:40 UTC', 'headline': "NATO vows to defend 'every inch' of Poland", 'body': 'NATO officials said allied troops would defend every inch of Polish territory after a spate of incursions.', 'source': 'REUTERS', 'status': 'CONFIRMED', 'size': 'brief', 'scene': '', 'brief': "NATO: defend 'every inch' of Poland."},
-    {'n': 35, 'region': 4, 'lat': 28.6, 'lon': 77.2, 'place': 'New Delhi', 'kicker': 'INDIA · 11:20 UTC', 'headline': 'Congress protests a data-centre tax hike', 'body': 'Opposition Congress members demonstrated in New Delhi against a proposed tax on data centres.', 'source': 'PTI / REUTERS', 'status': 'REPORTED', 'size': 'brief', 'scene': '', 'brief': 'Congress protests data-centre tax in Delhi.'}
+    {'n': 30, 'region': 2, 'lat': 27.0, 'lon': 55.5, 'place': 'Strait of Hormuz', 'kicker': 'IRAN · 21:00 UTC', 'headline': 'Iranian army says it downed five drones', 'body': "Iran's army said it shot down five drones over the Strait of Hormuz. No further details were given.", 'source': 'IRNA / REUTERS', 'status': 'CLAIM', 'size': 'brief', 'scene': '', 'brief': 'Iran says it downed 5 drones over Hormuz.'}
 ]
 
 REGION_NAMES = ["EUROPE", "MIDDLE EAST", "AFRICA", "ASIA", "AMERICAS", "OCEANIA", "GLOBAL"]
