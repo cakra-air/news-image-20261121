@@ -65,7 +65,8 @@ def pass_semantics():
 
 def pass_300px():
     fonts = {
-        "masthead": 66, "deck": 15, "stat number": 30, "region label": 9,
+        "masthead": 66, "masthead label": 9, "deck": 15,
+        "stat number": 30, "region label": 9,
         "main headline": 18, "main body": 10, "small headline": 11,
         "small body": 9, "list headline": 8, "list source": 6,
         "date check": 7, "source line": 8,
