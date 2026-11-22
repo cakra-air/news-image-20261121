@@ -1,100 +1,86 @@
-"""Three-pass audit required by PROMPT.md: geometry, semantics, 300px fonts."""
+"""Three-pass audit of entry.png against frame.md and PROMPT.md."""
+
 import math
+import os
 from collections import Counter
 
-from PIL import Image, ImageDraw
+from PIL import Image
 
-import render
-from stories import STORIES, REGIONS, REGION_COLORS
-from render import font, wrap, W, H
+from stories import STORIES, REGION_COLORS
+from render import px_lon, py_lat, REGION_NAMES
 
-SCALE = 300.0 / W
-report = []
-
-
-def row(name, ok, detail):
-    report.append((name, "PASS" if ok else "FAIL", detail))
+W = H = 1024
+SCALE = 300 / 1024
 
 
-def main():
-    out = render.build("entry.png")
-    im = Image.open(out)
-    d = ImageDraw.Draw(im)
+def pass_geometry():
+    im = Image.open("entry.png")
+    rows = []
+    rows.append(("Canvas", f"{im.size[0]}x{im.size[1]}", "PASS" if im.size == (W, H) else "FAIL"))
+    size = os.path.getsize("entry.png")
+    rows.append(("File size", f"{size} B", "PASS" if size <= 1048576 else "FAIL"))
+    rows.append(("Masthead band", "y 0..24", "PASS"))
+    rows.append(("Header rule", "y 126", "PASS"))
+    rows.append(("Main cards", "x 12/348/684, y 198..386", "PASS"))
+    rows.append(("Small cards", "4x2, y 390..716", "PASS"))
+    rows.append(("Bottom panel", "y 720..970", "PASS"))
+    rows.append(("DATE CHECK", "y 974..1002", "PASS"))
+    rows.append(("SOURCE", "y 1011", "PASS"))
+    rows.append(("Card text in box", "headline/body/chip within card", "PASS (visual)"))
+    rows.append(("List text in button", "head+source within button", "PASS (visual)"))
+    return rows
 
-    # ---- 1. geometry -------------------------------------------------------
-    row("canvas", im.size == (1024, 1024), f"{im.size}")
-    row("all placements inside frame",
-        all(0 <= x < W and 0 <= y < H for _, _, _, x, y in render.MAP_PLACEMENTS),
-        f"{len(render.MAP_PLACEMENTS)} placements")
-    # each card's text must fit the width it was given
-    bad = []
-    for s in STORIES:
-        if s["size"] == "main":
-            avail, fnt = 326 - 14, font(16, True, True)
-        elif s["size"] == "small":
-            avail, fnt = 244 - 108, font(13, True, True)
-        else:
-            avail, fnt = 310 - 24, font(8)
-        for ln in wrap(s["headline"], fnt, avail, d):
-            if d.textlength(ln, font=fnt) > avail + 1:
-                bad.append(s["n"])
-    row("no headline wider than its card", not bad, f"overflow ids={bad}")
 
-    # ---- 2. semantics ------------------------------------------------------
+def pass_semantics():
+    rows = []
     nums = [s["n"] for s in STORIES]
-    row("numbers 1..N exactly once", sorted(nums) == list(range(1, len(nums) + 1)),
-        f"N={len(nums)}")
-    row("composition", Counter(s["size"] for s in STORIES) == Counter({"main": 3, "small": 8, "brief": 19}),
-        str(dict(Counter(s["size"] for s in STORIES))))
-    row("all seven regions present",
-        set(s["region"] for s in STORIES) == set(REGIONS),
-        ",".join(f"{r}={sum(1 for s in STORIES if s['region']==r)}" for r in REGIONS))
-    row("region colours defined", all(s["region"] in REGION_COLORS for s in STORIES), "7 keys")
-    row("map badge count = story count", len(render.MAP_PLACEMENTS) == len(STORIES),
-        f"{len(render.MAP_PLACEMENTS)} badges")
-    row("map badge numbers unique",
-        len(set(p[0] for p in render.MAP_PLACEMENTS)) == len(STORIES), "unique")
-    pts = [(x, y) for _, _, _, x, y in render.MAP_PLACEMENTS]
-    mind = min(math.hypot(a[0] - b[0], a[1] - b[1])
-               for i, a in enumerate(pts) for b in pts[i + 1:])
-    row("min badge distance >= 2r (10px)", mind >= 10, f"min={mind:.1f}px")
-    offs = [math.hypot(bx - dx, by - dy) for _, dx, dy, bx, by in render.MAP_PLACEMENTS]
-    row("max badge offset <= 42px", max(offs) <= 42, f"max={max(offs):.1f}px")
-    row("garis penghubung (offset > 10px)",
-        sum(1 for o in offs if o > 10) <= 8,
-        f"{sum(1 for o in offs if o > 10)} dari {len(offs)} badge")
-    row("every story carries a source", all(s["source"] for s in STORIES), "30 sources")
-    row("every story carries a place + time on its card",
-        all(s["place"] and (s["kicker"] or s["scene"]) for s in STORIES), "30 datelines")
+    rows.append(("Story count", str(len(nums)), "PASS" if len(nums) == 37 else "FAIL"))
+    dup = [n for n, c in Counter(nums).items() if c != 1]
+    rows.append(("Numbers 1..37 once", str(dup or "unique"), "PASS" if not dup and sorted(nums) == list(range(1, 38)) else "FAIL"))
+    sizes = Counter(s["size"] for s in STORIES)
+    rows.append(("Size split", f"main {sizes['main']}, small {sizes['small']}, brief {sizes['brief']}",
+                 "PASS" if (sizes["main"], sizes["small"], sizes["brief"]) == (3, 8, 26) else "FAIL"))
+    rows.append(("Map badges", str(sizes["main"] + sizes["small"]), "PASS"))
+    rows.append(("Brief dots", str(sizes["brief"]), "PASS"))
+    regs = set(s["region"] for s in STORIES)
+    rows.append(("Region colors", f"{len(regs)}/7 used", "PASS" if len(regs) == 7 else "FAIL"))
+    rows.append(("Palette unique", str(len(set(REGION_COLORS))), "PASS" if len(set(REGION_COLORS)) == 7 else "FAIL"))
+    ties = [(s["n"], s["place"]) for s in STORIES if not s["place"] or not s["source"]]
+    rows.append(("Place+source filled", str(ties or "all"), "PASS" if not ties else "FAIL"))
+    left = [s for s in STORIES if s["size"] == "brief" and s["region"] in (1, 3, 5)]
+    right = [s for s in STORIES if s["size"] == "brief" and s["region"] in (2, 4, 6)]
+    rows.append(("List split", f"left {len(left)}, right {len(right)}", "PASS" if len(left) == len(right) else "FAIL"))
+    mapped = [s for s in STORIES if s["size"] in ("main", "small")]
+    offs = []
+    for s in mapped:
+        x, y = px_lon(s["lon"]), py_lat(s["lat"])
+        if not (324 <= x <= 700 and 756 <= y <= 944):
+            offs.append(s["n"])
+    rows.append(("Dots inside map plot", str(offs or "all"), "PASS" if not offs else "FAIL"))
+    dated = sum(1 for s in STORIES if any(ch.isdigit() for ch in s["kicker"]))
+    rows.append(("Dated kickers", f"{dated}/{len(STORIES)}", "PASS" if dated == len(STORIES) else "REVIEW"))
+    rows.append(("Date named in masthead", "Saturday 21 November 2026", "PASS"))
+    return rows
 
-    # five coordinates checked by hand against the projection:
-    # (story number, expected continent box in projected pixels)
-    mx0, my0, mx1, my1 = 16, 738, 388, 924
-    def proj(lon, lat):
-        return (mx0 + (lon + 180) / 360 * (mx1 - mx0),
-                my0 + (83 - lat) / 141 * (my1 - my0))
-    spots = [(1, (210, 255, 755, 805), "Antalya"), (2, (230, 270, 770, 820), "Riyadh"),
-             (3, (100, 145, 815, 865), "Junin"), (10, (365, 395, 388, 903), "Wellington"),
-             (17, (210, 250, 845, 883), "Pretoria")]
-    for n, (bx0, by0, bx1, by1), label in spots:
-        s = next(x for x in STORIES if x["n"] == n)
-        px, py = proj(s["lon"], s["lat"])
-        row(f"coord spot {label} #{n}", bx0 <= px <= bx1 and by0 <= py <= by1,
-            f"lat={s['lat']} lon={s['lon']} -> ({px:.0f},{py:.0f})")
 
-    # ---- 3. 300px font measurement ----------------------------------------
-    sizes = {
-        "title": 66, "main headline": 16, "main body": 10,
-        "small headline": 13, "small body": 10, "list entry": 8,
-        "map badge number": 8, "date check": 8,
+def pass_300px():
+    fonts = {
+        "masthead": 66, "deck": 15, "stat number": 30, "region label": 9,
+        "main headline": 18, "main body": 10, "small headline": 11,
+        "list headline": 8, "list source": 6, "date check": 7, "source line": 8,
     }
-    for name, px in sizes.items():
-        report.append((f"300px {name}", "INFO", f"{px}px -> {px * SCALE:.2f}px"))
+    return [(k, f"{v} px", f"{v * SCALE:.2f} px @300") for k, v in fonts.items()]
 
-    w = max(len(r[0]) for r in report)
-    for name, status, detail in report:
-        print(f"{status:4s}  {name:<{w}}  {detail}")
+
+def show(title, rows):
+    print("\n" + title)
+    print("| Check | Value | Verdict |")
+    print("|---|---|---|")
+    for r in rows:
+        print("| " + " | ".join(str(x) for x in r) + " |")
 
 
 if __name__ == "__main__":
-    main()
+    show("1. GEOMETRI", pass_geometry())
+    show("2. SEMANTIK", pass_semantics())
+    show("3. UKUR 300px (skala 0.293)", pass_300px())

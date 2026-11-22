@@ -1,12 +1,12 @@
-refs/
-research_feeds.py
-research_out.txt
-crop_*.png
-*.tar.gz
 __pycache__/
+*.pyc
+kit_news.tar.gz
 makefun-credentials.json
 makefun-keypair.json
+pending-connect.json
 repo-news-image-20261121.txt
 pecut agent biar pinter.md
-test-bundle.tar.gz
-date check.PNG
+top*.webp
+news-image-20261121-kit/
+drybundle.tar.gz
+transcripts.tar.gz

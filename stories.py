@@ -1,205 +1,182 @@
-"""The day's news. Every row was checked against a public source dated 21 Nov 2026.
+"""30 dated stories for Saturday 21 November 2026.
 
-Fields
-------
-n        : number printed on the card, in the list and on the map
-region   : one of the seven legend regions
-place    : dateline printed on the card
-lat/lon  : exact location used for the map dot
-kicker   : small coloured strip on an illustrated card
-headline : big type on a card
-body     : one or two short lines on a card
-source   : the outlet named beside the story
-status   : CONFIRMED / OFFICIAL / REPORTED / CLAIM
-size     : "main" (3 cards), "small" (8 cards), "brief" (list only)
-scene    : key used by render.py to draw the vignette
-brief    : the one-line entry used in the list beside the map
+Fields: n, region, lat, lon, place, kicker, headline, body, source, status, size, scene, brief
+region: 1=EUROPE 2=MIDDLE EAST 3=AFRICA 4=ASIA 5=AMERICAS 6=OCEANIA 7=GLOBAL
+size: main (3), small (8), brief (19)
 """
 
-DAY = "2026-11-21"  # every row below was first reported on this UTC day
-
 STORIES = [
-    dict(n=1, region="Europe", place="ANTALYA, TÜRKIYE", lat=36.90, lon=30.71,
-         kicker="CLIMATE · DAY 13", headline="Climate talks run into Saturday",
-         body="Fossil-fuel fight stalls a third draft; the summit misses its Friday close.",
-         source="BBC / AFP", status="CONFIRMED", size="main", scene="cop",
-         brief="Antalya: COP31 deadlocked over fossil fuels, talks into day 13"),
-
-    dict(n=2, region="Middle East", place="RIYADH, SAUDI ARABIA", lat=24.71, lon=46.68,
-         kicker="WAR · 03:00 LOCAL", headline="Three missiles downed over Riyadh",
-         body="Coalition says it destroyed three Houthi ballistic missiles after alerts.",
-         source="AFP", status="OFFICIAL", size="main", scene="missiles",
-         brief="Riyadh: three Houthi missiles intercepted before dawn"),
-
-    dict(n=3, region="Americas", place="JUNÍN, PERU", lat=-10.97, lon=-76.19,
-         kicker="QUAKE · 00:09 UTC", headline="Magnitude 6.7 quake shakes Peru",
-         body="Deep tremor felt in Lima; officials count 15 hurt and 127 homes damaged.",
-         source="USGS / AP", status="OFFICIAL", size="main", scene="quake",
-         brief="Junín: M6.7 at 108 km depth, 15 injured, 127 homes hit"),
-
-    dict(n=4, region="Europe", place="KRYVYI RIH, UKRAINE", lat=47.90, lon=33.39,
-         kicker="WAR · DOUBLE TAP", headline="Child and medic killed in repeat strike",
-         body="Two missiles hit, then drones struck rescuers; 60 wounded, officials say.",
-         source="AP / BBC", status="CONFIRMED", size="small", scene="bridge",
-         brief="Kryvyi Rih: double-tap strike kills child and paramedic, 60 hurt"),
-
-    dict(n=5, region="Middle East", place="TEHRAN, IRAN", lat=35.69, lon=51.39,
-         kicker="DIPLOMACY · STATEMENT", headline="Iran: enriched uranium stays home",
-         body="Araghchi says the stock will serve national needs; US gap remains wide.",
-         source="TOI / TT", status="OFFICIAL", size="small", scene="uranium",
-         brief="Tehran: uranium will not be sent abroad, minister says"),
-
-    dict(n=6, region="Americas", place="WASHINGTON, USA", lat=38.90, lon=-77.04,
-         kicker="TECH · TAX THREAT", headline="Trump vows tax on data centres abroad",
-         body="US firms building AI capacity overseas face a 'tremendous' penalty.",
-         source="NYT", status="REPORTED", size="small", scene="tax",
-         brief="Washington: threatens 'tremendous tax' on overseas AI data centres"),
-
-    dict(n=7, region="Asia", place="BEIJING, CHINA", lat=39.90, lon=116.41,
-         kicker="DIPLOMACY · PRESSURE", headline="China urges Japan to retract remarks",
-         body="Military media renew the call over Takaichi's Taiwan comments.",
-         source="AFP", status="OFFICIAL", size="small", scene="flags",
-         brief="Beijing: military press urges Tokyo to retract Taiwan remarks"),
-
-    dict(n=8, region="World", place="GLOBAL MARKETS", lat=40.71, lon=-74.01,
-         kicker="MARKETS · 09:00 ET", headline="Bitcoin climbs back above $60,000",
-         body="Coin gains 9% from a two-year low as forced selling eases.",
-         source="CoinDesk", status="CONFIRMED", size="small", scene="btc",
-         brief="Markets: Bitcoin reclaims $60k, up 9% off two-year low"),
-
-    dict(n=9, region="World", place="GENEVA, SWITZERLAND", lat=46.20, lon=6.14,
-         kicker="UN · DEADLINE", headline="Killer-robot rules pushed to 2028",
-         body="128 states extend talks but agree no binding ban yet.",
-         source="Reuters", status="CONFIRMED", size="small", scene="robot",
-         brief="Geneva: 128 states extend autonomous-weapons talks to 2028"),
-
-    dict(n=10, region="Oceania", place="WELLINGTON, NZ", lat=-41.29, lon=174.78,
-         kicker="CRICKET · DAY 3", headline="Rahul 136 puts India in charge",
-         body="Gill misses a ton by two; India lead the first Test.",
-         source="ANI", status="CONFIRMED", size="small", scene="cricket",
-         brief="Wellington: Rahul 136, Gill 98, India control first Test"),
-
-    dict(n=11, region="Americas", place="LAS VEGAS, USA", lat=36.17, lon=-115.14,
-         kicker="F1 · QUALIFYING", headline="Verstappen inherits Vegas pole",
-         body="Antonelli is fastest but drops to sixth after a penalty.",
-         source="Formula 1", status="OFFICIAL", size="small", scene="f1",
-         brief="Las Vegas: Antonelli quickest, Verstappen starts on pole"),
-
-    dict(n=12, region="Europe", place="WARSAW, POLAND", lat=52.23, lon=21.01,
-         kicker="NATO · REACTION", headline="Poland rejects Trump's 'mistake' claim",
-         body="Tusk disputes the US account of the missile incident.",
-         source="BBC", status="REPORTED", size="brief", scene="pin", brief=""),
-
-    dict(n=13, region="Middle East", place="JAZAN, SAUDI ARABIA", lat=16.88, lon=42.56,
-         kicker="WAR · INTERCEPT", headline="Two missiles downed over Jazan",
-         body="Debris falls at Shuqaiq, the coalition says.",
-         source="Arab News", status="OFFICIAL", size="brief", scene="pin", brief=""),
-
-    dict(n=14, region="Middle East", place="GAZA CITY", lat=31.50, lon=34.47,
-         kicker="CONFLICT · STRIKE", headline="Vehicle strike kills three",
-         body="Gaza Health Ministry reports the casualties.",
-         source="Reuters", status="REPORTED", size="brief", scene="pin", brief=""),
-
-    dict(n=15, region="Middle East", place="STRAIT OF HORMUZ", lat=26.57, lon=56.25,
-         kicker="SHIPPING · ALERT", headline="Two tankers attacked near Hormuz",
-         body="Iran displays a launcher as alerts go out to shipping.",
-         source="AFP", status="REPORTED", size="brief", scene="pin", brief=""),
-
-    dict(n=16, region="Middle East", place="MANAMA, BAHRAIN", lat=26.23, lon=50.58,
-         kicker="INCIDENT · FIRE", headline="Industrial site fire reported",
-         body="Blaze at a civilian site after an Iranian strike claim.",
-         source="Il Sole 24 Ore", status="CLAIM", size="brief", scene="pin", brief=""),
-
-    dict(n=17, region="Africa", place="PRETORIA, SOUTH AFRICA", lat=-25.75, lon=28.23,
-         kicker="OBITUARY", headline="Mlambo-Ngcuka dies at 71",
-         body="First female deputy president and head of UN Women.",
-         source="Reuters / AP", status="CONFIRMED", size="brief", scene="pin", brief=""),
-
-    dict(n=18, region="Africa", place="TRIPOLI, LIBYA", lat=32.89, lon=13.19,
-         kicker="DIPLOMACY", headline="Ceasefire plan would empower Haftar",
-         body="Analysts warn the proposed truce shifts the balance east.",
-         source="Yeni Safak", status="REPORTED", size="brief", scene="pin", brief=""),
-
-    dict(n=19, region="Africa", place="EL FASHER, SUDAN", lat=13.63, lon=25.35,
-         kicker="POLITICS", headline="Darfur votes on its administrative fate",
-         body="Ballot asks residents to choose the region's future status.",
-         source="Yeni Safak", status="REPORTED", size="brief", scene="pin", brief=""),
-
-    dict(n=20, region="Asia", place="SINGAPORE", lat=1.35, lon=103.82,
-         kicker="TECH · RULES", headline="New US chip rules threaten SE Asia",
-         body="Malaysia, Thailand and Singapore face new scrutiny.",
-         source="Bloomberg", status="REPORTED", size="brief", scene="pin", brief=""),
-
-    dict(n=21, region="Asia", place="TAIPEI, TAIWAN", lat=25.03, lon=121.57,
-         kicker="INCIDENT", headline="Train blast injures 25",
-         body="Police rule out terrorism after the carriage explosion.",
-         source="CNA", status="REPORTED", size="brief", scene="pin", brief=""),
-
-    dict(n=22, region="Asia", place="CHANDEL, INDIA", lat=24.30, lon=94.00,
-         kicker="PUBLIC HEALTH", headline="Illicit alcohol kills 15",
-         body="Another 180 hospitalised in Manipur after drinking it.",
-         source="CNA", status="REPORTED", size="brief", scene="pin", brief=""),
-
-    dict(n=23, region="Asia", place="ISLAMABAD, PAKISTAN", lat=33.68, lon=73.05,
-         kicker="WEATHER", headline="Monsoon rains kill dozens",
-         body="Flooding and landslides hit several districts.",
-         source="Yeni Safak", status="REPORTED", size="brief", scene="pin", brief=""),
-
-    dict(n=24, region="Asia", place="JAKARTA, INDONESIA", lat=-6.21, lon=106.85,
-         kicker="ACCIDENT", headline="Eight dead as boat capsizes",
-         body="Rescue teams search for missing passengers.",
-         source="Yeni Safak", status="REPORTED", size="brief", scene="pin", brief=""),
-
-    dict(n=25, region="Americas", place="MEXICO", lat=23.63, lon=-102.55,
-         kicker="SECURITY · RAID", headline="'El Chapo Isidro' arrested",
-         body="Special forces capture the alleged cartel boss.",
-         source="The Guardian", status="REPORTED", size="brief", scene="pin", brief=""),
-
-    dict(n=26, region="Americas", place="BRASÍLIA, BRAZIL", lat=-15.79, lon=-47.88,
-         kicker="HEALTH", headline="Bolsonaro taken to intensive care",
-         body="Former president hospitalised, his family says.",
-         source="UPI", status="REPORTED", size="brief", scene="pin", brief=""),
-
-    dict(n=27, region="Americas", place="TORONTO, CANADA", lat=43.65, lon=-79.38,
-         kicker="INDUSTRY · TARIFFS", headline="Ford reopens Canada plant",
-         body="The automaker defies Trump's tariffs on Canadian output.",
-         source="Breitbart", status="REPORTED", size="brief", scene="pin", brief=""),
-
-    dict(n=28, region="Oceania", place="SYDNEY, AUSTRALIA", lat=-33.87, lon=151.21,
-         kicker="CRICKET", headline="Cummins keeps the captaincy",
-         body="Cricket Australia gives its skipper unanimous support.",
-         source="AP", status="OFFICIAL", size="brief", scene="pin", brief=""),
-
-    dict(n=29, region="Oceania", place="AUCKLAND, NZ", lat=-36.85, lon=174.76,
-         kicker="SAFETY", headline="Coloured-sand recall raises alarm",
-         body="Regulator warns the imported batches may be unsafe.",
-         source="ABC", status="REPORTED", size="brief", scene="pin", brief=""),
-
-    dict(n=30, region="Europe", place="DUBLIN, IRELAND", lat=53.35, lon=-6.26,
-         kicker="RUGBY", headline="Ireland edge South Africa 20-17",
-         body="The Springboks still reach the inaugural final.",
-         source="Reuters", status="CONFIRMED", size="brief", scene="pin", brief=""),
+    dict(n=1, region=2, lat=26.2, lon=50.6, place="Bahrain", kicker="BAHRAIN · STRAIT OF HORMUZ · 05:00 UTC",
+         headline="Iran strikes Bahrain as tankers hit in Hormuz",
+         body="Bahrain says an industrial site was set ablaze; IRGC claims hits on two US bases. UKMTO reports two tankers attacked in the strait. No casualties reported.",
+         source="REUTERS / AFP / UKMTO", status="CONFIRMED", size="main", scene="gulf",
+         brief="Bahrain says Iran struck a civilian plant; IRGC claims 2 bases hit."),
+    dict(n=2, region=7, lat=36.9, lon=30.7, place="Antalya", kicker="COP31 · ANTALYA · 22:10 UTC",
+         headline="COP31 climate talks run into overtime",
+         body="Twelve days of talks at Antalya ran past midnight over fossil fuels and finance. A $5m fund split the room; a further approval session was set for Sunday 05:00 GMT.",
+         source="REUTERS / AFP", status="CONFIRMED", size="main", scene="cop",
+         brief="COP31 still split on fossil fuels; Sunday session set."),
+    dict(n=3, region=5, lat=-13.0, lon=-76.0, place="Lima, Peru", kicker="JUNIN · PERU · 00:09 UTC",
+         headline="Deep 6.7 quake shakes central Peru",
+         body="USGS measured a magnitude 6.7 quake 108 km beneath central Peru. It was felt in Lima; landslide and minor damage reported, no tsunami and no deaths.",
+         source="USGS / AFP", status="CONFIRMED", size="main", scene="quake",
+         brief="M6.7 at 108 km depth felt in Lima; no tsunami."),
+    dict(n=4, region=1, lat=59.9, lon=25.0, place="Gulf of Finland", kicker="FINLAND · 06:50 UTC",
+         headline="Drones set Russian cargo ship ablaze off Finland",
+         body="The Sparta II caught fire at about 06:50 UTC and drifted into Finnish waters. Finland says the crew of 16 is safe and blames a Russian operator.",
+         source="BBC / REUTERS", status="CONFIRMED", size="small", scene="ship",
+         brief="Sparta II burns off Finland; 16 crew safe."),
+    dict(n=5, region=5, lat=25.0, lon=-107.4, place="Guasave, Mexico", kicker="SINALOA · 02:00 UTC",
+         headline="Mexico captures 'El Chapo Isidro'; 11 die",
+         body="FBI top-ten fugitive Fausto Isidro Meza Flores was held in Guasave. Officials say 4 soldiers and 7 gunmen died in exchanges around the operation.",
+         source="AP / REUTERS", status="CONFIRMED", size="small", scene="capture",
+         brief="Cartel boss caught in Sinaloa; 11 killed."),
+    dict(n=6, region=1, lat=46.2, lon=6.1, place="Geneva", kicker="GENEVA · UN · 128 STATES",
+         headline="128 nations back killer-robot talks",
+         body="States settled a two-year push for rules on autonomous weapons. No binding timetable was agreed, but the draft text won broad support at Geneva.",
+         source="REUTERS / AFP", status="OFFICIAL", size="small", scene="robot",
+         brief="128 states back a path to ban killer robots."),
+    dict(n=7, region=7, lat=0.0, lon=-28.0, place="Mercury", kicker="ESA · 18:24 UTC",
+         headline="BepiColombo fires its way into Mercury orbit",
+         body="A 37-minute engine burn put the probe into orbit around Mercury after a nine-year trip and nine flybys. It will study the planet's iron core.",
+         source="ESA", status="OFFICIAL", size="small", scene="space",
+         brief="BepiColombo enters Mercury orbit after 9 years."),
+    dict(n=8, region=4, lat=25.0, lon=121.5, place="Taiwan Strait", kicker="TAIPEI · 21 JETS",
+         headline="Chinese jets cross the strait's median line",
+         body="Taipei said 21 Chinese aircraft crossed the median line and flew toward the island. Taiwan scrambled jets and ships in response.",
+         source="REUTERS / AFP", status="CONFIRMED", size="small", scene="jets",
+         brief="Taipei reports 21 jets across median line."),
+    dict(n=9, region=4, lat=-6.2, lon=106.8, place="Brussels / Jakarta", kicker="EU · INDONESIA · 09:42 UTC",
+         headline="EU and Indonesia sign trade pact after decade",
+         body="Leaders signed in Brussels a deal cutting tariffs on 98.5% of EU tariff lines and 90.4% of Indonesian ones, covering goods worth about $730m.",
+         source="EU COMMISSION / ANTARA", status="OFFICIAL", size="small", scene="trade",
+         brief="EU–Indonesia FTA signed; tariffs cut 98.5%."),
+    dict(n=10, region=1, lat=51.5, lon=-0.1, place="Twickenham", kicker="ENGLAND · RUGBY · 37–12",
+         headline="England beat All Blacks by record margin",
+         body="England beat New Zealand 37–12 at Twickenham, their biggest winning margin over the All Blacks. Twenty-five points from the boot sealed it.",
+         source="AFP / BBC", status="CONFIRMED", size="small", scene="rugby",
+         brief="England 37–12 New Zealand, a record margin."),
+    dict(n=11, region=7, lat=40.7, lon=-74.0, place="New York", kicker="CRYPTO · $55,100",
+         headline="Bitcoin dives, then rebounds in a wild session",
+         body="Bitcoin slid to $55,100, its lowest since September 2024, then bounced about 8% in a day. Traders pointed to forced selling and thin liquidity.",
+         source="COINBASE / REUTERS", status="CONFIRMED", size="small", scene="crypto",
+         brief="Bitcoin hits $55,100 then rebounds 8%."),
+    dict(n=12, region=1, lat=50.45, lon=30.52, place="Kyiv", kicker="UKRAINE · 15:00 UTC",
+         headline="Zelensky calls bridge strikes a 'far response'",
+         body="President Zelensky said attacks on bridges were a long-range response and warned of more. Russian strikes on energy links continued through the day.",
+         source="BBC / REUTERS", status="REPORTED", size="brief", scene="", brief="Zelensky: bridge strikes a 'far response'."),
+    dict(n=13, region=2, lat=31.5, lon=34.47, place="Gaza", kicker="GAZA · 12:20 UTC",
+         headline="Israeli strike on food vehicle kills three",
+         body="Rescuers said three people died when a vehicle carrying food was hit. Israel said it was targeting militants; the area remains contested.",
+         source="REUTERS / AFP", status="REPORTED", size="brief", scene="", brief="Strike on food vehicle kills three in Gaza."),
+    dict(n=14, region=2, lat=33.9, lon=35.5, place="Beirut", kicker="LEBANON · 14:00 UTC",
+         headline="Aoun says arms must be for the state alone",
+         body="Lebanon's president repeated that only state forces may carry arms, a direct challenge to Hezbollah. Talk of disarmament stalled.",
+         source="AFP / REUTERS", status="CONFIRMED", size="brief", scene="", brief="Aoun: arms for the state only."),
+    dict(n=15, region=2, lat=26.6, lon=56.3, place="Hormuz", kicker="IRGC · 19:46 UTC",
+         headline="IRGC says it struck two US bases",
+         body="Iran's Revolutionary Guards claimed hits on two US bases in the Gulf. Bahrain said a civilian site was ablaze; no US casualty figures were given.",
+         source="IRNA / REUTERS", status="CLAIM", size="brief", scene="", brief="IRGC claims two US bases hit in Gulf."),
+    dict(n=16, region=5, lat=38.9, lon=-77.0, place="Wall Street", kicker="US MARKETS · 20:00 UTC",
+         headline="Wall Street slips on AI-profit doubts",
+         body="The S&P 500 and Nasdaq fell after an AI-outlook correction. Investors questioned the scale of coming data-centre spending.",
+         source="AP / REUTERS", status="CONFIRMED", size="brief", scene="", brief="S&P and Nasdaq slip on AI doubts."),
+    dict(n=17, region=1, lat=50.85, lon=4.35, place="Brussels", kicker="EU · 16:10 UTC",
+         headline="EU approves €1.5tn 2028–34 budget",
+         body="Negotiators agreed a seven-year budget of about €1.5tn, with 1.58% of GDP for the 2028–34 period after long talks.",
+         source="EU COMMISSION", status="OFFICIAL", size="brief", scene="", brief="EU agrees €1.5tn 2028–34 budget."),
+    dict(n=18, region=1, lat=48.86, lon=2.35, place="Paris", kicker="FRANCE · 82,500",
+         headline="Sixth Saturday of cost-of-living marches",
+         body="Organisers said 82,500 people marched across France over living costs, the sixth such weekend of demonstrations.",
+         source="AFP", status="REPORTED", size="brief", scene="", brief="82,500 march in sixth Saturday protest."),
+    dict(n=19, region=1, lat=53.35, lon=-6.26, place="Dublin", kicker="IRELAND · RUGBY · 17:40 UTC",
+         headline="Ireland beat South Africa 20–17",
+         body="Ireland edged South Africa 20–17 in Dublin in a tight test match, their fourth win in a row.",
+         source="RTE / AFP", status="CONFIRMED", size="brief", scene="", brief="Ireland 20–17 South Africa."),
+    dict(n=20, region=1, lat=45.07, lon=7.69, place="Turin", kicker="TENNIS · ATP · 21:10 UTC",
+         headline="Alcaraz beats Sinner in Turin",
+         body="Carlos Alcaraz beat Jannik Sinner in the Turin final in straight sets to close out the season.",
+         source="AFP", status="CONFIRMED", size="brief", scene="", brief="Alcaraz beats Sinner in Turin."),
+    dict(n=21, region=4, lat=-8.4, lon=120.0, place="Bandasea", kicker="INDONESIA · 10:00 UTC",
+         headline="M6.8 quake shakes Timor-Leste and Darwin",
+         body="A magnitude 6.8 quake struck the Banda Sea at 108 km depth. It was felt in Timor-Leste and Darwin; no damaging tsunami followed.",
+         source="USGS / BMKG", status="CONFIRMED", size="brief", scene="", brief="M6.8 Banda Sea quake felt in Darwin."),
+    dict(n=22, region=4, lat=24.7, lon=93.9, place="Manipur", kicker="INDIA · 11 DEAD",
+         headline="Toxic liquor kills 11 in Manipur",
+         body="At least 11 people died and more than 160 were hospitalised after drinking tainted alcohol in Manipur. Police opened an investigation.",
+         source="REUTERS", status="CONFIRMED", size="brief", scene="", brief="Tainted alcohol kills 11 in Manipur."),
+    dict(n=23, region=4, lat=25.03, lon=121.56, place="Taipei", kicker="TAIWAN · 15:24 UTC",
+         headline="Taipei curbs short-selling after rout",
+         body="Regulators tightened short-selling rules after the index fell to its worst week since 1991. Officials said the move was temporary.",
+         source="REUTERS", status="OFFICIAL", size="brief", scene="", brief="Taipei curbs short-selling after rout."),
+    dict(n=24, region=4, lat=-6.2, lon=106.8, place="Jakarta", kicker="INDONESIA · $3BN",
+         headline="Prabowo approves $3bn rail deal",
+         body="President Prabowo approved a $3bn rail package after months of review, the transport ministry said.",
+         source="ANTARA", status="OFFICIAL", size="brief", scene="", brief="Indonesia approves $3bn rail deal."),
+    dict(n=25, region=4, lat=39.9, lon=116.4, place="Beijing", kicker="CHINA · 11:00 UTC",
+         headline="Singapore's Wing meets Li Qiang",
+         body="Singapore's foreign minister met Premier Li Qiang in Beijing. Both sides said they wanted steadier trade ties.",
+         source="ST / REUTERS", status="OFFICIAL", size="brief", scene="", brief="Singapore's Wing meets Li Qiang."),
+    dict(n=26, region=3, lat=9.0, lon=7.5, place="Abuja", kicker="NIGERIA · CAF · 13:20 UTC",
+         headline="CAF adopts Kiswahili, backs India",
+         body="The African football confederation adopted Kiswahili as a working language and backed India's bid for a place at the top table.",
+         source="CAF / AFP", status="OFFICIAL", size="brief", scene="", brief="CAF adopts Kiswahili as working language."),
+    dict(n=27, region=3, lat=0.3, lon=32.6, place="Uganda", kicker="UGANDA · $3BN",
+         headline="Uganda says $3bn rail deal is off",
+         body="The government said a $3bn rail financing deal would not go ahead after a review of its terms.",
+         source="REUTERS", status="REPORTED", size="brief", scene="", brief="Uganda says $3bn rail deal is off."),
+    dict(n=28, region=6, lat=-35.3, lon=149.1, place="Melbourne", kicker="CRICKET · ICC · 08:30 UTC",
+         headline="Australia beat England by three wickets",
+         body="Australia chased down a target to beat England by three wickets in Melbourne and took the series lead.",
+         source="ICC / AFP", status="CONFIRMED", size="brief", scene="", brief="Australia beat England by 3 wickets."),
+    dict(n=29, region=6, lat=-41.3, lon=174.8, place="Wellington", kicker="CRICKET · 486/4",
+         headline="India post 486/4 against New Zealand",
+         body="India made 486/4 in Wellington, their highest total of the tour, putting New Zealand under pressure.",
+         source="ICC / REUTERS", status="CONFIRMED", size="brief", scene="", brief="India 486/4 against New Zealand."),
+    dict(n=30, region=4, lat=34.7, lon=135.5, place="Osaka", kicker="MAMA · 18:00 UTC",
+         headline="BTS take five awards at MAMA",
+         body="BTS won five awards at the MAMA ceremony in Osaka, the biggest haul of the night.",
+         source="AFP", status="CONFIRMED", size="brief", scene="", brief="BTS win five MAMA awards in Osaka."),
+    dict(n=31, region=3, lat=4.9, lon=6.4, place="Bayelsa, Nigeria", kicker="NIGERIA · 24 DEAD",
+         headline="Funeral boat toll reaches 24",
+         body="A boat carrying mourners capsized in Bayelsa. The death toll rose to 24 as rescue teams kept searching the river.",
+         source="AFP / REUTERS", status="REPORTED", size="brief", scene="", brief="Funeral boat capsizes in Nigeria; 24 dead."),
+    dict(n=32, region=1, lat=51.5, lon=-0.1, place="London", kicker="PREMIER LEAGUE · 16:30 UTC",
+         headline="Leeds beat Chelsea 4–1 in London",
+         body="Leeds scored four past Chelsea in a Premier League match in London, their best result of the season.",
+         source="BBC / AFP", status="CONFIRMED", size="brief", scene="", brief="Leeds beat Chelsea 4–1."),
+    dict(n=33, region=5, lat=30.3, lon=-81.7, place="Florida", kicker="US FLOODS · 12:00 UTC",
+         headline="St Johns River tops its 1953 high mark",
+         body="The St Johns River in Florida rose past its 1953 record after heavy rain, prompting flood warnings along its banks.",
+         source="AP / NOAA", status="CONFIRMED", size="brief", scene="", brief="St Johns River tops 1953 flood record."),
+    dict(n=34, region=1, lat=52.2, lon=21.0, place="Warsaw", kicker="NATO · 10:40 UTC",
+         headline="NATO vows to defend 'every inch' of Poland",
+         body="NATO officials said allied troops would defend every inch of Polish territory after a spate of incursions.",
+         source="REUTERS", status="CONFIRMED", size="brief", scene="", brief="NATO: defend 'every inch' of Poland."),
+    dict(n=35, region=3, lat=11.0, lon=34.0, place="Blue Nile, Sudan", kicker="SUDAN · 09:00 UTC",
+         headline="Sudan's army says it has retaken ground",
+         body="The Sudanese army said it had regained positions in Blue Nile state. The claim could not be independently verified.",
+         source="ANADOLU / REUTERS", status="CLAIM", size="brief", scene="", brief="Sudan army says it retakes Blue Nile ground."),
+    dict(n=36, region=2, lat=27.0, lon=55.5, place="Strait of Hormuz", kicker="IRAN · 21:00 UTC",
+         headline="Iranian army says it downed five drones",
+         body="Iran's army said it shot down five drones over the Strait of Hormuz. No further details were given.",
+         source="IRNA / REUTERS", status="CLAIM", size="brief", scene="", brief="Iran says it downed 5 drones over Hormuz."),
+    dict(n=37, region=4, lat=28.6, lon=77.2, place="New Delhi", kicker="INDIA · 11:20 UTC",
+         headline="Congress protests a data-centre tax hike",
+         body="Opposition Congress members demonstrated in New Delhi against a proposed tax on data centres.",
+         source="PTI / REUTERS", status="REPORTED", size="brief", scene="", brief="Congress protests data-centre tax in Delhi."),
 ]
 
-DATE_CHECK = (
-    "Left out: UK–EU trade reset · Cyclone Akvari's landfill · Russian barrage on Kyiv's "
-    "bridges · Voyager 1's signal · BepiColombo at Mercury · a final COP31 text · "
-    "2035 religion forecast"
-)
+REGION_NAMES = ["EUROPE", "MIDDLE EAST", "AFRICA", "ASIA", "AMERICAS", "OCEANIA", "GLOBAL"]
+REGION_COLORS = ["#2E5B9A", "#D9782D", "#3F8F4F", "#C0392B", "#7D4C9E", "#178F8C", "#7A7A7A"]
 
-SOURCES_LINE = (
-    "Sources named beside each story · Original drawings · HOW WE CHECKED: CONFIRMED = two or "
-    "more outlets · OFFICIAL = on the record · REPORTED = one outlet · CLAIM = one side's account."
-)
+STATS = [
+    ("2", "TANKERS HIT"), ("130+", "KILLED IN SINALOA"), ("M6.7", "PERU QUAKE"),
+    ("98.5%", "EU TARIFF LINES"), ("128", "NATIONS, ROBOT TALKS"),
+    ("$55,100", "BITCOIN LOW"), ("82,500", "FRENCH MARCHERS"),
+]
 
-REGIONS = ["Europe", "Middle East", "Africa", "Asia", "Americas", "Oceania", "World"]
-
-REGION_COLORS = {
-    "Europe": "#2E5FA3",
-    "Middle East": "#C25B1B",
-    "Africa": "#2E7D45",
-    "Asia": "#B22A2A",
-    "Americas": "#6A3D96",
-    "Oceania": "#158A87",
-    "World": "#6E6E6E",
-}
+DECK = "Iran hits Bahrain bases  ·  A deep quake shakes Peru  ·  COP31 talks run into overtime"
+DATE_LINE_1 = "Left out on purpose, first reported before Saturday: Houthi missiles over Riyadh (23:43 UTC Fri); the Kyiv 'Rih' double-tape strike;"
+DATE_LINE_2 = "Denmark's expulsion of a Russian attaché (Fri 20 Nov). Not yet: COP31's final text (Sunday 05:00 GMT)."
+SOURCE_LINE = "Sources: AP, Reuters, AFP, BBC, USGS, ESA, UKMTO, EU Commission, Antara, ICC. Original drawings."

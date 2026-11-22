@@ -3,6 +3,12 @@
 - Lihat top 5 leaderboard sebagai referensi visual, lalu riset mandiri dari sumber publik.
 - Urutkan berita berdasarkan topik paling hangat.
 - Komposisi: 3 kartu utama, 8 kartu kecil, sisanya masuk daftar di samping peta.
+- Tabel kotak — koordinat + ukuran semua elemen, plus jarak antar blok (4px / 4px / 10px).
+- Kartu — utama 326×188, kecil 244×160 dengan ilustrasi di atas ±3/4 kartu + badge.
+- Peta — area 372×186, aturan titik/badge/legenda/caption.
+- Daftar — 19 entri, 2 kolom × 10 baris.
+- DATE CHECK — kotak 1000×28, badge merah 50×22, dua baris isi mulai x=76 (sejajar, tidak turun ke bawah badge), baris 2 tanpa tanggal, tanpa alasan, SOURCE di luar kotak.
+- ilustrasi card kecil berada di atas card.3/4 di pake ilustrasi dan badge
 - Setiap ilustrasi harus menunjukkan **lokasi + waktu + apa yang terjadi**, cukup detail untuk dipahami hanya dari gambar. Jika sulit dibuat ilustrasi yang benar, ganti beritanya.
 - Semua berita harus benar-benar berasal dari tanggal bounty. Sertakan DATE CHECK berisi berita yang sengaja tidak dimasukkan beserta alasannya.
 
