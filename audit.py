@@ -8,6 +8,7 @@ from PIL import Image
 
 from stories import STORIES, REGION_COLORS
 from render import px_lon, py_lat, REGION_NAMES
+import mapaudit
 
 W = H = 1024
 SCALE = 300 / 1024
@@ -83,7 +84,14 @@ def show(title, rows):
         print("| " + " | ".join(str(x) for x in r) + " |")
 
 
+def pass_map():
+    """Rows produced by the standalone map verifier."""
+    found = mapaudit.full_report(STORIES, REGION_COLORS)
+    return [(item.name, item.observed, item.verdict) for item in found]
+
+
 if __name__ == "__main__":
     show("1. GEOMETRI", pass_geometry())
     show("2. SEMANTIK", pass_semantics())
     show("3. UKUR 300px (skala 0.293)", pass_300px())
+    show("4. AUDIT PETA", pass_map())
