@@ -517,7 +517,7 @@ def draw_main_cards(im, d):
             txt(d, (x + 7, 310 + j * 21), fit(d, ln, F["mh"], 312), F["mh"], rgb(INK))
         bl = wrap(d, s["body"], F["mb"], 312)[:2]
         for j, ln in enumerate(bl):
-            txt(d, (x + 7, 346 + j * 13), fit(d, ln, F["mb"], 312), F["mb"], rgb(MUTED))
+            txt(d, (x + 7, 350 + j * 12), fit(d, ln, F["mb"], 312), F["mb"], rgb(MUTED))
         chip(d, x + 250, 372, s["status"])
 
 
@@ -536,7 +536,7 @@ def draw_small_cards(im, d):
         txt(d, (x + 235, y + 93), s["source"], F["ss"], "#FFFFFF", "rm")
         hl = wrap(d, s["headline"], F["sh"], 232)[:2]
         for j, ln in enumerate(hl):
-            txt(d, (x + 6, y + 104 + j * 10), fit(d, ln, F["sh"], 232), F["sh"], rgb(INK))
+            txt(d, (x + 6, y + 104 + j * 12), fit(d, ln, F["sh"], 232), F["sh"], rgb(INK))
         chip(d, x + 174, y + 147, s["status"])
 
 
