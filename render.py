@@ -503,8 +503,9 @@ def draw_legend(d):
 # --------------------------------------------------------------------------
 def draw_header(d):
     d.rectangle((0, 0, 1024, 24), fill=rgb(RED))
-    txt(d, (512, 12), "WORLD NEWS ROUNDUP · SATURDAY 21 NOVEMBER 2026",
-        F["lab"], "#FFFFFF", "mm")
+    txt(d, (12, 12), "THE WORLD IN ONE DAY", F["lab"], "#FFFFFF", "lm")
+    txt(d, (512, 12), "DAY 325 OF 2026", F["lab"], "#FFFFFF", "mm")
+    txt(d, (1012, 12), "ALL TIME UTC", F["lab"], "#FFFFFF", "rm")
     txt(d, (512, 62), "Saturday 21 November 2026", F["mast"], rgb(INK), "mm")
     txt(d, (512, 113), DECK, F["deck"], rgb(MUTED), "mm")
     d.line((12, 126, 1012, 126), fill=rgb(LINE), width=1)
