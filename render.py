@@ -388,14 +388,18 @@ def build(out="entry.png"):
             yy += 12
         put(d, (x + 100, y + 131), s["source"], font(8, True), rgb(REGION_COLORS[s["region"]]))
 
-    map_panel(d, (12, 680, 392, 960))
-    list_panel(d, (400, 680, W - 12, 960))
+    map_panel(d, (12, 680, 392, 946))
+    list_panel(d, (400, 680, W - 12, 946))
 
-    # Sources and DATE CHECK are one bottom block, pushed to the very bottom.
-    put(d, (12, 978),
-        "Every story happened, or was first reported, on Saturday 21 November 2026. Sources are named beside each story. Original drawings.",
-        font(7.5), MUTED)
-    put(d, (12, 1006), "DATE CHECK — " + DATE_CHECK, font(8), rgb(RED))
+    # Red box: DATE CHECK on top, EVERY STORY below it. Source sits outside,
+    # under the box, close to the bottom edge.
+    d.rounded_rectangle([12, 950, W - 12, 992], radius=3,
+                        fill="#FBF1EE", outline=rgb(RED), width=2)
+    put(d, (20, 961), "DATE CHECK — " + DATE_CHECK, font(8), rgb(RED))
+    put(d, (20, 981),
+        "Every story happened, or was first reported, on Saturday 21 November 2026.",
+        font(8), INK)
+    put(d, (12, 1009), SOURCES_LINE, font(7.5), MUTED)
 
     im.save(out, "PNG", optimize=True)
     return out
