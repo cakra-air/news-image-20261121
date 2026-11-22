@@ -391,24 +391,24 @@ def build(out="entry.png"):
         put(d, (x + 100, y + 151), s["source"], font(7.5), MUTED)
         chip(d, x + cw - 74, y + 145, s["status"], fill="#E9E2D2", fsize=7)
 
-    map_panel(d, (12, 720, 392, 920))
-    list_panel(d, (400, 720, W - 12, 920))
+    map_panel(d, (12, 720, 392, 960))
+    list_panel(d, (400, 720, W - 12, 960))
 
     # Badge on the left; every body line starts at the same x as the first
     # line of content, never under the badge.
-    d.rectangle([12, 944, W - 12, 980], fill="#FBF6EE", outline=rgb(RED), width=1)
-    d.rectangle([18, 948, 68, 976], fill=rgb(RED), outline=rgb(RED), width=1)
-    put(d, (43, 956), "DATE", font(7, True), "#FFFFFF", anchor="mm")
-    put(d, (43, 968), "CHECK", font(7, True), "#FFFFFF", anchor="mm")
-    tx, ty = 76, 950
+    d.rectangle([12, 964, W - 12, 992], fill="#FBF6EE", outline=rgb(RED), width=1)
+    d.rectangle([18, 967, 68, 989], fill=rgb(RED), outline=rgb(RED), width=1)
+    put(d, (43, 974), "DATE", font(7, True), "#FFFFFF", anchor="mm")
+    put(d, (43, 984), "CHECK", font(7, True), "#FFFFFF", anchor="mm")
+    tx, ty = 76, 968
     for ln in wrap(DATE_CHECK, font(7.5), W - tx - 20, d)[:2]:
         put(d, (tx, ty), ln, font(7.5), INK)
         ty += 11
-    put(d, (12, 988),
+    put(d, (12, 1000),
         "Every story happened, or was first reported, on Saturday 21 November 2026. "
         "Official counts and claims are attributed.",
         font(6.5), MUTED)
-    put(d, (W - 12, 1005), SOURCES_LINE, font(6), MUTED, anchor="rm")
+    put(d, (W - 12, 1015), SOURCES_LINE, font(6), MUTED, anchor="rm")
 
     im.save(out, "PNG", optimize=True)
     return out
