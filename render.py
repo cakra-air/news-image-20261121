@@ -199,14 +199,14 @@ def s_gulf(d, w, h):
     # Iranian launch site: three arrowed missiles — one at Bahrain, two at the tankers
     lx, ly = w * .88, h * .24
     d.ellipse((lx - 4, ly - 4, lx + 4, ly + 4), fill=RED)
-    for tx, ty in ((bx, by), (w * .50, h * .32), (w * .68, h * .58)):
+    for tx, ty in ((bx, by), (w * .50, h * .58), (w * .70, h * .66)):
         d.line((lx, ly, tx, ty), fill=RED, width=2)
         a = math.atan2(ty - ly, tx - lx)
         for k in (-0.6, 0.6):
             d.line((tx, ty, tx - 6 * math.cos(a + k), ty - 6 * math.sin(a + k)), fill=RED, width=2)
-    _ship(d, w * .50, h * .42, 1.0, True)
-    _ship(d, w * .68, h * .67, .85, False)
-    for cx, cy in ((w * .50, h * .35), (w * .68, h * .60)):
+    _ship(d, w * .50, h * .66, 1.0, True)
+    _ship(d, w * .70, h * .74, .85, False)
+    for cx, cy in ((w * .50, h * .58), (w * .70, h * .66)):
         d.ellipse((cx - 9, cy - 7, cx + 9, cy + 7), outline=RED, width=2)
     txt(d, (w * .04, h * .16 + 4), "SAUDI ARABIA", F["art_s"], MUTED)
     pill(d, 4, 3, "05:00 UTC · STRAIT OF HORMUZ", F["art_l"])
