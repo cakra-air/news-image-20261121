@@ -391,21 +391,24 @@ def build(out="entry.png"):
         put(d, (x + 100, y + 131), s["source"], font(7.5), MUTED)
         chip(d, x + cw - 74, y + 125, s["status"], fill="#E9E2D2", fsize=7)
 
-    map_panel(d, (12, 680, 392, 944))
-    list_panel(d, (400, 680, W - 12, 944))
+    map_panel(d, (12, 680, 392, 920))
+    list_panel(d, (400, 680, W - 12, 920))
 
-    # DATE CHECK between two rules; SOURCE sticks right under the lower rule,
-    # both pushed down to the bottom edge of the image.
-    d.line([12, 952, W - 12, 952], fill=rgb(RED), width=1)
-    label = "DATE CHECK: "
-    fl, fb = font(9, True), font(8)
-    put(d, (20, 960), label, fl, rgb(RED))
-    indent = 20 + d.textlength(label, font=fl)
-    lines = wrap(DATE_CHECK, fb, 700, d)
-    for i, ln in enumerate(lines[:3]):
-        put(d, (20 if i else indent, 960 + i * 12), ln, fb, INK)
-    d.line([12, 996, W - 12, 996], fill=rgb(RED), width=1)
-    put(d, (20, 1003), "SOURCE: " + SOURCES_LINE, font(7), MUTED)
+    # Badge on the left; every body line starts at the same x as the first
+    # line of content, never under the badge.
+    d.rectangle([12, 924, W - 12, 982], fill="#FBF6EE", outline=rgb(RED), width=1)
+    d.rectangle([18, 930, 64, 976], fill="#FFFFFF", outline=rgb(RED), width=1)
+    put(d, (41, 946), "DATE", font(8, True), rgb(RED), anchor="mm")
+    put(d, (41, 960), "CHECK", font(8, True), rgb(RED), anchor="mm")
+    tx, ty = 72, 932
+    for ln in wrap(DATE_CHECK, font(8), W - tx - 20, d)[:4]:
+        put(d, (tx, ty), ln, font(8), INK)
+        ty += 12
+    put(d, (12, 990),
+        "Every story happened, or was first reported, on Saturday 21 November 2026. "
+        "Official counts and claims are attributed.",
+        font(7), MUTED)
+    put(d, (W - 12, 1007), SOURCES_LINE, font(6.5), MUTED, anchor="rm")
 
     im.save(out, "PNG", optimize=True)
     return out
