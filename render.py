@@ -396,19 +396,19 @@ def build(out="entry.png"):
 
     # Badge on the left; every body line starts at the same x as the first
     # line of content, never under the badge.
-    d.rectangle([12, 924, W - 12, 982], fill="#FBF6EE", outline=rgb(RED), width=1)
-    d.rectangle([18, 930, 64, 976], fill="#FFFFFF", outline=rgb(RED), width=1)
-    put(d, (41, 946), "DATE", font(8, True), rgb(RED), anchor="mm")
-    put(d, (41, 960), "CHECK", font(8, True), rgb(RED), anchor="mm")
-    tx, ty = 72, 932
-    for ln in wrap(DATE_CHECK, font(8), W - tx - 20, d)[:4]:
-        put(d, (tx, ty), ln, font(8), INK)
-        ty += 12
-    put(d, (12, 990),
+    d.rectangle([12, 944, W - 12, 980], fill="#FBF6EE", outline=rgb(RED), width=1)
+    d.rectangle([18, 948, 68, 976], fill="#FFFFFF", outline=rgb(RED), width=1)
+    put(d, (43, 956), "DATE", font(7, True), rgb(RED), anchor="mm")
+    put(d, (43, 968), "CHECK", font(7, True), rgb(RED), anchor="mm")
+    tx, ty = 76, 950
+    for ln in wrap(DATE_CHECK, font(7.5), W - tx - 20, d)[:2]:
+        put(d, (tx, ty), ln, font(7.5), INK)
+        ty += 11
+    put(d, (12, 988),
         "Every story happened, or was first reported, on Saturday 21 November 2026. "
         "Official counts and claims are attributed.",
-        font(7), MUTED)
-    put(d, (W - 12, 1007), SOURCES_LINE, font(6.5), MUTED, anchor="rm")
+        font(6.5), MUTED)
+    put(d, (W - 12, 1005), SOURCES_LINE, font(6), MUTED, anchor="rm")
 
     im.save(out, "PNG", optimize=True)
     return out
