@@ -137,7 +137,7 @@ def place_findings(stories: list[dict]) -> list[Finding]:
         Finding("brief dots inside the plot",
                 f"{sum(valid)} / {len(valid)}", all(valid)),
         Finding("brief count matches the two lists",
-                f"{len(dots)}", len(dots) == 19),
+                f"{len(dots)}", len(dots) == 24),
     ]
 
 
