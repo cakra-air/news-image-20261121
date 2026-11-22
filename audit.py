@@ -66,7 +66,7 @@ def main():
 
     # five coordinates checked by hand against the projection:
     # (story number, expected continent box in projected pixels)
-    mx0, my0, mx1, my1 = 16, 738, 388, 914
+    mx0, my0, mx1, my1 = 16, 738, 388, 924
     def proj(lon, lat):
         return (mx0 + (lon + 180) / 360 * (mx1 - mx0),
                 my0 + (83 - lat) / 141 * (my1 - my0))
